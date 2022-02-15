@@ -89,8 +89,24 @@ public static class ImportUtilities
     }
 
 
-    public static void ParseJSON()
+    public static void GetURLtxtAndTITLEtxtFromJSON()
     {
-        
+        Process proc = new Process();
+        proc.StartInfo.UseShellExecute = false;
+        proc.StartInfo.RedirectStandardOutput = false;
+        proc.StartInfo.RedirectStandardInput = false;
+        proc.StartInfo.CreateNoWindow = true;
+        proc.StartInfo.FileName = "cmd.exe";
+        //proc.StartInfo.Arguments = String.Format("/C " + Environment.CurrentDirectory.Replace('\\','/') + "/jq/jq.exe .[].url _chromtabJSON.json > lolnono.txt");
+        proc.StartInfo.Arguments = String.Format("/C jq.exe .[].url _chromtabJSON.json > CurrentListOfURLs.txt");
+        proc.Start();
+        proc.WaitForExit();
+
+        //proc.StartInfo.Arguments = String.Format("/C " + Environment.CurrentDirectory.Replace('\\','/') + "/jq/jq.exe .[].url _chromtabJSON.json > lolnono.txt");
+        proc.StartInfo.Arguments = String.Format("/C jq.exe .[].title _chromtabJSON.json > CurrentListOfTitles.txt");
+        proc.Start();
+        proc.WaitForExit();
+        proc.Dispose();
+        int i = 0;
     }
 }

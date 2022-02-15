@@ -18,8 +18,8 @@ namespace ChromeDroid_TabMan
     {
         public int TabCount { get; private set; }
         private bool tabsProcessed = false;
-        private string urlSrcPath = string.Empty;
-        private string titleSrcPath = string.Empty;
+        private string urlSrcPath = "CurrentListOfURLs.txt";
+        private string titleSrcPath = "CurrentListOfTitles.txt";
         //public readonly ArrayList tabs = new ArrayList(); //Contains TabInf for each Tab.
         public readonly List<TabInf> tabs = new List<TabInf>(); //Contains TabInf for each Tab.
         //public readonly ArrayList baseURLs = new ArrayList();
@@ -30,19 +30,21 @@ namespace ChromeDroid_TabMan
             //this.urlSrcPath = ReadPath(type);
             //type = PathType.Title_txt;
             //this.titleSrcPath = ReadPath(type);
-            this.titleSrcPath = "C:\\Users\\Noman\\Desktop\\ChromeAndroidTabs-TITLES.txt";
-            this.urlSrcPath = "C:\\Users\\Noman\\Desktop\\ChromeAndroidTabs-URL.txt";
+            ImportUtilities.GetURLtxtAndTITLEtxtFromJSON();
+            //this.titleSrcPath = "C:\\Users\\Noman\\Desktop\\ChromeAndroidTabs-TITLES.txt";
+            //this.urlSrcPath = "C:\\Users\\Noman\\Desktop\\ChromeAndroidTabs-URL.txt";
             this.TabCount = 0;
             ProcessTabs(PrintEnabled);
         }
         
-        public TabsList()
-        {
-            string fileName = "_chromtabJSON.json";
-            string jsonString = File.ReadAllText("lol.json");//fileName);
-            TabInf t1 = JsonSerializer.Deserialize<TabInf>(jsonString);
+        //public TabsList()
+        //{
+        //    string fileName = "_chromtabJSON.json";
+        //    string jsonString = File.ReadAllText("lol.json");//fileName);
+        //    BasicTabInf t1 = JsonSerializer.Deserialize(jsonString, basic))
+        //    string wow = t1.lastKnownTitle;
             
-        }
+        //}
 
         public string ExportToHTML(string outputfile="")
         {
