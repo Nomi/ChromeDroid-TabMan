@@ -163,7 +163,7 @@ public static class ImportUtilities
                     filePath = openFileDialog.FileName;
                     if (filePath == string.Empty)
                     {
-                        if (DialogResult.Cancel == MessageBox.Show("No file selected.", "Warning:", MessageBoxButtons.RetryCancel))
+                        if (DialogResult.Cancel == MessageBox.Show("No file selected.", "Notice", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation))
                         {
                             IsCancelled = true;
                             return "-1";
@@ -181,7 +181,7 @@ public static class ImportUtilities
                 }
                 else
                 {
-                    if (DialogResult.Cancel == MessageBox.Show("No file selected.", "Warning:", MessageBoxButtons.RetryCancel))
+                    if (DialogResult.Cancel == MessageBox.Show("No file selected.", "Notice", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation))
                     {
                         IsCancelled = true;
                         return "-1";
