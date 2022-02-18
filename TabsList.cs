@@ -66,6 +66,7 @@ namespace ChromeDroid_TabMan
             {
                 using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
                 {
+                    w.WriteLine("<H1><strong>----------------- TOTAL TABS RECOVERED= {0} -----------------</strong></H1>", TabCount);
                     //NEED TO MAKE MORE EFFICIENT!! (Not need, but should!)
                     foreach (var baseurl in baseURLs)
                     {
