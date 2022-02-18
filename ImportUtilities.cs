@@ -2,6 +2,7 @@
 using System.IO;
 using System.Diagnostics;
 using System.Net;
+using System.Windows.Forms;
 
 enum NextStepImpUtil
 {
@@ -14,14 +15,18 @@ public static class ImportUtilities
 {
     private static System.Diagnostics.Process proc=null;
     private static NextStepImpUtil nextStep = NextStepImpUtil.StartADB;
-    public static void StartChromeAndroidJsonListServer()
+    public static void StartChromeAndroidJsonListServer(string adbPath)
     {
         if(nextStep!=NextStepImpUtil.StartADB)
         {
             //Implement error message here
             throw new NotImplementedException();
         }
-        ProcessStartInfo procStartInfo = new ProcessStartInfo(@"C:\Program Files (x86)\Minimal ADB and Fastboot\adb.exe");
+        ProcessStartInfo procStartInfo;
+        if (adbPath == string.Empty) //this if/else is just for testing right now. It can't be triggered normally, so it's fine. Will remove it some day.
+            procStartInfo = new ProcessStartInfo(@"C:\Program Files (x86)\Minimal ADB and Fastboot\adb.exe");
+        else
+            procStartInfo = new ProcessStartInfo(adbPath);
         procStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
         procStartInfo.CreateNoWindow = true;
         procStartInfo.RedirectStandardInput = true;
@@ -89,8 +94,15 @@ public static class ImportUtilities
     }
 
 
-    public static void GetURLtxtAndTITLEtxtFromJSON()
+    public static void GetURLtxtAndTITLEtxtFromJSON(string jsonPath="")
     {
+        bool usingDefaultPath = false;
+        if (jsonPath == "")
+        {
+            jsonPath = "\"" + System.AppContext.BaseDirectory + "_chromtabJSON.json\"";
+            usingDefaultPath = true;
+        }
+
         Process proc = new Process();
         proc.StartInfo.UseShellExecute = false;
         proc.StartInfo.RedirectStandardOutput = false;
@@ -98,15 +110,67 @@ public static class ImportUtilities
         proc.StartInfo.CreateNoWindow = true;
         proc.StartInfo.FileName = "cmd.exe";
         //proc.StartInfo.Arguments = String.Format("/C " + Environment.CurrentDirectory.Replace('\\','/') + "/jq/jq.exe .[].url _chromtabJSON.json > lolnono.txt");
-        proc.StartInfo.Arguments = String.Format("/C jq.exe .[].url _chromtabJSON.json > CurrentListOfURLs.txt");
+        string jqLocation = System.AppContext.BaseDirectory + @"\_redist\jq\";//jq.exe"; //"\""+System.AppContext.BaseDirectory + @"\_redist\jq\jq.exe" + "\"";
+        proc.StartInfo.WorkingDirectory = jqLocation;
+        proc.StartInfo.Arguments = String.Format("/C jq.exe .[].url \"" + jsonPath +"\" > \"" + System.AppContext.BaseDirectory+ "CurrentListOfURLs.txt\"");
         proc.Start();
         proc.WaitForExit();
 
         //proc.StartInfo.Arguments = String.Format("/C " + Environment.CurrentDirectory.Replace('\\','/') + "/jq/jq.exe .[].url _chromtabJSON.json > lolnono.txt");
-        proc.StartInfo.Arguments = String.Format("/C jq.exe .[].title _chromtabJSON.json > CurrentListOfTitles.txt");
+        proc.StartInfo.Arguments = String.Format("/C jq.exe .[].title \"" + jsonPath + "\" > \"" + System.AppContext.BaseDirectory + "CurrentListOfTitles.txt\"");
         proc.Start();
         proc.WaitForExit();
         proc.Dispose();
-        int i = 0;
+
+        if(usingDefaultPath)
+        {
+            ///The following is to rename old .json to .json.bak:
+            // Source file to be renamed  
+            //string sourceFile = "_chromtabJSON.json";
+            // Creating FileInfo  
+            System.IO.FileInfo file = new System.IO.FileInfo(jsonPath);//(sourceFile);
+            // Checking if file exists. 
+            if (file.Exists)
+            {
+                // Move file with a new name. Hence renamed.  
+                file.MoveTo("_chromtabJSON.json.bak");
+                //Console.WriteLine("File Renamed.");
+            }
+        }
+
+    }
+
+
+    public static string GetADBPathDialog()
+    {
+        //var fileContent = string.Empty;
+        var filePath = string.Empty;
+
+        using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        {
+            openFileDialog.InitialDirectory = "c:\\";
+            openFileDialog.Filter = "ADB Executable (adb.exe)|adb.exe|All Executables (*.exe)|*.exe";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //Get the path of specified file
+                filePath = openFileDialog.FileName;
+
+                ////Read the contents of the file into a stream
+                //var fileStream = openFileDialog.OpenFile();
+
+                //using (StreamReader reader = new StreamReader(fileStream))
+                //{
+                //    fileContent = reader.ReadToEnd();
+                //}
+            }
+        }
+
+        //MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
+        MessageBox.Show("Selected executable: " + filePath, "ADB Executable Selected!" + filePath, MessageBoxButtons.OK);
+
+        return filePath;
     }
 }

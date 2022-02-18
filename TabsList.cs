@@ -30,7 +30,6 @@ namespace ChromeDroid_TabMan
             //this.urlSrcPath = ReadPath(type);
             //type = PathType.Title_txt;
             //this.titleSrcPath = ReadPath(type);
-            ImportUtilities.GetURLtxtAndTITLEtxtFromJSON();
             //this.titleSrcPath = "C:\\Users\\Noman\\Desktop\\ChromeAndroidTabs-TITLES.txt";
             //this.urlSrcPath = "C:\\Users\\Noman\\Desktop\\ChromeAndroidTabs-URL.txt";
             this.TabCount = 0;
@@ -48,11 +47,20 @@ namespace ChromeDroid_TabMan
 
         public string ExportToHTML(string outputfile="")
         {
-            if(outputfile.Length==0||!outputfile.Trim('"').EndsWith(".html"))
+            string title = "recoveredTabs (" + DateTime.Now.ToString() + ")";
+            string outputBaseDIR = string.Empty;
+            if (outputfile.Length == 0 || !outputfile.Trim('"').EndsWith(".html"))
             {
-                outputfile = "recoveredTabs ("+DateTime.Now.ToString()+").htm";
-                outputfile=outputfile.Replace("/", "-");
+                outputfile = "LIST - " + title + ".html";
+                outputfile = outputfile.Replace("/", "-");
                 outputfile = outputfile.Replace(":", "-");
+                outputBaseDIR = System.AppContext.BaseDirectory + @"Exports\";
+                //if(!Directory.Exists(outputBaseDIR)) //turns out, don't need this for Directory.CreateDirectory.
+                //{
+                //    Directory.CreateDirectory(outputBaseDIR);
+                //}
+                Directory.CreateDirectory(outputBaseDIR);
+                outputfile = outputBaseDIR + outputfile;
             }
             using (FileStream fs = new FileStream(outputfile, FileMode.Create))
             {
@@ -93,11 +101,19 @@ namespace ChromeDroid_TabMan
         public string ExportToNetscapeBookmarksHTML(string outputfile = "", bool sort_baseURLs=false)
         {
             string title = "recoveredTabs (" + DateTime.Now.ToString() + ")";
+            string outputBaseDIR = string.Empty;
             if (outputfile.Length == 0 || !outputfile.Trim('"').EndsWith(".html"))
             {
                 outputfile = "Bookmarks - " + title+ ".html";
                 outputfile = outputfile.Replace("/", "-");
                 outputfile = outputfile.Replace(":", "-");
+                outputBaseDIR = System.AppContext.BaseDirectory + @"Exports\";
+                //if(!Directory.Exists(outputBaseDIR)) //turns out, don't need this for Directory.CreateDirectory.
+                //{
+                //    Directory.CreateDirectory(outputBaseDIR);
+                //}
+                Directory.CreateDirectory(outputBaseDIR);
+                outputfile = outputBaseDIR+ outputfile;
             }
             using (FileStream fs = new FileStream(outputfile, FileMode.Create))
             {
@@ -107,9 +123,9 @@ namespace ChromeDroid_TabMan
                     w.WriteLine("<!-- This is an automatically generated file.");
                     w.WriteLine("     It will be read and overwritten.");
                     w.WriteLine("     DO NOT EDIT! -->");
-                    w.WriteLine("<META HTTP-EQUIV=\"Content - Type\" CONTENT=\"text / html; charset = UTF - 8\">" + Environment.NewLine +
-                        "        < TITLE > Bookmarks </ TITLE >\n" +
-                        "        < H1 > Bookmarks </ H1 > ");
+                    w.WriteLine("<META HTTP-EQUIV=\"Content - Type\" CONTENT=\"text / html; charset = UTF - 8\">\n" +
+                        "        <TITLE> Bookmarks </TITLE>\n" +
+                        "        <H1> Bookmarks </H1>");
 
                     w.WriteLine("<DL><p>");
                     w.Write("   <DT><H3 ADD_DATE=\"" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + "\"LAST_MODIFIED=\"" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + "\">");
