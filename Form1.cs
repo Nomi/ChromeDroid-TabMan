@@ -123,8 +123,8 @@ namespace ChromeDroid_TabMan
             string clickMessage = "Make sure to:\n 1) Have ADB and proper ADB drivers for your device.\n";
             clickMessage += "2) Have \"USB Debugging\" enabled on the device to recover from.\n";
             clickMessage += "3) Connect ONLY the Android device you want to recover from.\n";
-            clickMessage += "4) Allow ADB Debugging from the pop-uo on your device.";
-            clickMessage += "5) Have Chrome open on your android device.";
+            clickMessage += "4) Allow ADB Debugging from the pop-up on your device.\n";
+            clickMessage += "5) Have Chrome open on your Android device.";
             MessageBox.Show(clickMessage, "REQUIREMENTS/INSTRUCTIONS", MessageBoxButtons.OK, MessageBoxIcon.Information);
             groupBox1.ForeColor = Color.White;
             importAndProcessGroupbox.ForeColor = Color.White;
