@@ -145,26 +145,48 @@ public static class ImportUtilities
     {
         //var fileContent = string.Empty;
         var filePath = string.Empty;
-
-        using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        bool IsCancelled = false;
+        while (filePath == string.Empty && !IsCancelled)
         {
-            openFileDialog.InitialDirectory = "c:\\";
-            openFileDialog.Filter = "ADB Executable (adb.exe)|adb.exe|All Executables (*.exe)|*.exe";
-            openFileDialog.FilterIndex = 1;
-            openFileDialog.RestoreDirectory = true;
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                //Get the path of specified file
-                filePath = openFileDialog.FileName;
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "ADB Executable (adb.exe)|adb.exe|All Executables (*.exe)|*.exe";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
 
-                ////Read the contents of the file into a stream
-                //var fileStream = openFileDialog.OpenFile();
 
-                //using (StreamReader reader = new StreamReader(fileStream))
-                //{
-                //    fileContent = reader.ReadToEnd();
-                //}
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+
+                    filePath = openFileDialog.FileName;
+                    if (filePath == string.Empty)
+                    {
+                        if (DialogResult.Cancel == MessageBox.Show("No file selected.", "Warning:", MessageBoxButtons.RetryCancel))
+                        {
+                            IsCancelled = true;
+                            return "-1";
+                        }
+                    }
+
+
+                    ////Read the contents of the file into a stream
+                    //var fileStream = openFileDialog.OpenFile();
+
+                    //using (StreamReader reader = new StreamReader(fileStream))
+                    //{
+                    //    fileContent = reader.ReadToEnd();
+                    //}
+                }
+                else
+                {
+                    if (DialogResult.Cancel == MessageBox.Show("No file selected.", "Warning:", MessageBoxButtons.RetryCancel))
+                    {
+                        IsCancelled = true;
+                        return "-1";
+                    }
+                }
             }
         }
 

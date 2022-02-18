@@ -133,10 +133,8 @@ namespace ChromeDroid_TabMan
             //need to add adb location selection window and an argument to take that in the StartChr... function.
             //ImportUtilities.StartChromeAndroidJsonListServer(string.Empty); //for testing/debugging
             string adbPath = string.Empty;
-            while(adbPath==string.Empty)
-            {
-                adbPath = ImportUtilities.GetADBPathDialog();
-            }
+            adbPath = ImportUtilities.GetADBPathDialog();
+            if (adbPath == "-1") return;
             ImportUtilities.StartChromeAndroidJsonListServer(adbPath);
             ImportUtilities.DownloadTabListJSON();
 
@@ -191,7 +189,7 @@ namespace ChromeDroid_TabMan
             groupBox1.ForeColor = Color.White;
             importAndProcessGroupbox.ForeColor = Color.White;
             connectGroupBox.ForeColor = Color.Orange;
-            MessageBox.Show("Button functionality may not be fully stable.", "!!! WORK IN PROGRESS !!!", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+            MessageBox.Show("Button functionality may not be fully stable.", "!!! WORK IN PROGRESS !!!", MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
