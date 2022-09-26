@@ -99,7 +99,7 @@ public static class ImportUtilities
         bool usingDefaultPath = false;
         if (jsonPath == "")
         {
-            jsonPath = "\"" + System.AppContext.BaseDirectory + "_chromtabJSON.json\"";
+            jsonPath = System.AppContext.BaseDirectory + "_chromtabJSON.json\""; //"\"" + System.AppContext.BaseDirectory + "_chromtabJSON.json\"";
             usingDefaultPath = true;
         }
 
