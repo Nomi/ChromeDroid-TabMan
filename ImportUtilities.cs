@@ -107,7 +107,7 @@ public static class ImportUtilities
         proc.StartInfo.UseShellExecute = false;
         proc.StartInfo.RedirectStandardOutput = false;
         proc.StartInfo.RedirectStandardInput = false;
-        proc.StartInfo.CreateNoWindow = true;
+        proc.StartInfo.CreateNoWindow = false;
         proc.StartInfo.FileName = "cmd.exe";
         //proc.StartInfo.Arguments = String.Format("/C " + Environment.CurrentDirectory.Replace('\\','/') + "/jq/jq.exe .[].url _chromtabJSON.json > lolnono.txt");
         string jqLocation = System.AppContext.BaseDirectory + @"\_redist\jq\";//jq.exe"; //"\""+System.AppContext.BaseDirectory + @"\_redist\jq\jq.exe" + "\"";
