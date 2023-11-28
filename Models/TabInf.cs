@@ -6,16 +6,16 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace ChromeDroid_TabMan
+namespace ChromeDroid_TabMan.Models
 {
-    class TabInf: IComparable<TabInf>
+    class TabInf : IComparable<TabInf>
     {
         [JsonIgnore]
         public readonly int tabPosition;
         [JsonPropertyName("url")]
         public string url;
         [JsonIgnore]
-        public readonly string title;
+        public readonly string currentTitle;
         [JsonIgnore]
         public readonly string baseWebsite;
         [JsonPropertyName("title")]
@@ -24,26 +24,37 @@ namespace ChromeDroid_TabMan
         public TabInf(string url, string lkTitle)
         {
             this.url = url;
-            this.title = "title-to-be-implemented";
-            this.lastKnownTitle = lkTitle;
-            this.tabPosition = -1;
+            currentTitle = "title-to-be-implemented";
+            lastKnownTitle = lkTitle;
+            tabPosition = -1;
             baseWebsite = GetBasewebsite();
         }
         public TabInf(string url, string title, int tabPos)
         {
             this.url = url;
-            this.title = title;
-            this.tabPosition = tabPos;
+            this.lastKnownTitle = title;
+            tabPosition = tabPos;
             baseWebsite = GetBasewebsite();
         }
         private string GetBasewebsite()
         {
             string baseURL = string.Empty;
+            //The following approach should be faster than regex I think.
             if (url.Contains("://"))
             {
                 int indexAfterColonDoubleSlash = url.IndexOf("://", 0) + "://".Length;
                 int indexNextSlash = url.IndexOf("/", indexAfterColonDoubleSlash);
+                if (indexNextSlash == -1)
+                    indexNextSlash = url.Length;
                 int ssLen = indexNextSlash - indexAfterColonDoubleSlash;
+                if (ssLen>4)
+                {
+                    if (url[indexAfterColonDoubleSlash]=='w' && url[indexAfterColonDoubleSlash+1] == 'w' && url[indexAfterColonDoubleSlash+2]=='w' && url[indexAfterColonDoubleSlash+3]=='.')
+                    {
+                        indexAfterColonDoubleSlash += 4;
+                        ssLen= indexNextSlash - indexAfterColonDoubleSlash;
+                    }
+                }
                 baseURL = url.Substring(indexAfterColonDoubleSlash, ssLen);
             }
             return baseURL;
@@ -51,7 +62,7 @@ namespace ChromeDroid_TabMan
 
         public int CompareTo(TabInf tab2)
         {
-            return this.baseWebsite.CompareTo(tab2.baseWebsite);
+            return baseWebsite.CompareTo(tab2.baseWebsite);
         }
     }
 }

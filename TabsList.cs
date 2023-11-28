@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChromeDroid_TabMan.Models;
+//using JQ.Net;
+//using JQ.Net.JQ;
 
 namespace ChromeDroid_TabMan
 {

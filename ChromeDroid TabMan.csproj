@@ -7,4 +7,8 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="JQ.NET" Version="1.0.4" />
+  </ItemGroup>
+
 </Project>
