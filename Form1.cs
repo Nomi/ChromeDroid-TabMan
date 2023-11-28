@@ -4,27 +4,27 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using ChromeDroid_TabMan.ConnectionAndImport;
+using ChromeDroid_TabMan.Data;
 using ChromeDroid_TabMan.Models;
 
 namespace ChromeDroid_TabMan
 {
     public partial class MainForm : Form
     {
-        TabsList tabbys =null;
         string manuallySetJsonLocation = string.Empty;
         DataTable dt = new DataTable();
         public MainForm()
         {
-            dt.Columns.Add("Tab Position");
+            dt.Columns.Add("Tab Position",typeof(int));
             dt.Columns.Add("Title");
             dt.Columns.Add("URL");
             dt.Columns.Add("Base URL");
             InitializeComponent();
 
-
-            //FillMyTreeView(tabbys);
-            //tabbys.ExportToHTML();
-            //tabbys.ExportToNetscapeBookmarksHTML();
+            var tabsList = TabsList.GetInstance();
+            //FillMyTreeView(tabsList);
+            //tabsList.ExportToHTML();
+            //tabsList.ExportToNetscapeBookmarksHTML();
         }
 
         //private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -44,11 +44,11 @@ namespace ChromeDroid_TabMan
         //}
         private void FillMyTreeView(TabsList tabs)
         {
-            List<TabInf> gtl = new List<TabInf>(tabs.tabs);
+            List<TabInf> gtl = new List<TabInf>(tabs.Tabs);
 
             gtl.Sort();
             tabListTree.BeginUpdate();
-            List<string> basur = new List<string>(tabs.baseURLs);
+            List<string> basur = new List<string>(tabs.BaseURLs);
             basur.Sort();
             tabListTree.Nodes.Add(new TreeNode("**Unidentified BaseURLs**"));
             foreach (string baseUrl in basur)
@@ -81,7 +81,8 @@ namespace ChromeDroid_TabMan
 
         private void FillDataGridView1()
         {
-            foreach (TabInf tab in tabbys.tabs)
+            var tabsList = TabsList.GetInstance();
+            foreach (TabInf tab in tabsList.Tabs)
             {
                 //this.listView1.Items.Add(tab.url);
                 DataRow dr = dt.NewRow();
@@ -149,11 +150,15 @@ namespace ChromeDroid_TabMan
 
             dt.Clear();
             tabListTree.Nodes.Clear();
-            ImportUtilities.GetURLtxtAndTITLEtxtFromJSON(manuallySetJsonLocation);
-            tabbys = new TabsList(false);
+            var basicTabInfs = ImportUtilities.LoadJson(manuallySetJsonLocation);
+            ImportUtilities.GetURLtxtAndTITLEtxtFromJSON(basicTabInfs);
+
+            var tabsList = TabsList.GetInstance();
+            tabsList.ResetTabList(); //In case this has already been used once. //The class is singleton.
+            tabsList.Process(basicTabInfs);
 
             FillDataGridView1();
-            FillMyTreeView(tabbys);
+            FillMyTreeView(tabsList);
 
 
             importAndProcessGroupbox.ForeColor = Color.Lime;
@@ -168,7 +173,8 @@ namespace ChromeDroid_TabMan
         private void button_exportListHTML_Click(object sender, EventArgs e)
         {
             //add select path dialog box??
-            string outputPath =  tabbys.ExportToHTML();
+            var tabsList = TabsList.GetInstance();
+            string outputPath =  tabsList.ExportToHTML();
             if(groupBox1.ForeColor!=Color.Lime)
             {
                 groupBox1.ForeColor = Color.Yellow;
@@ -179,7 +185,8 @@ namespace ChromeDroid_TabMan
         private void button_ExportAsBookmarks_Click(object sender, EventArgs e)
         {
             //add select path dialog box??
-            string outputPath= tabbys.ExportToNetscapeBookmarksHTML();
+            var tabsList = TabsList.GetInstance();
+            string outputPath= tabsList.ExportToNetscapeBookmarksHTML();
             groupBox1.ForeColor = Color.Lime;
             MessageBox.Show("The Bookmarks file has been exported to: " + outputPath, "Bookmarks Exported!", MessageBoxButtons.OK);
         }

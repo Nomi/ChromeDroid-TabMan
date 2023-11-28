@@ -1,53 +1,75 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
+using ChromeDroid_TabMan.Auxiliary;
 using ChromeDroid_TabMan.Models;
 //using JQ.Net;
 //using JQ.Net.JQ;
 
-namespace ChromeDroid_TabMan
+namespace ChromeDroid_TabMan.Data
 {
-    public enum PathType
+    //Singleton:
+    public class TabsList
     {
-        URL_txt=1,
-        Title_txt=2
-    }
-    class TabsList
-    {
-        public int TabCount { get; private set; }
-        private bool tabsProcessed = false;
-        private string urlSrcPath = "CurrentListOfURLs.txt";
-        private string titleSrcPath = "CurrentListOfTitles.txt";
-        //public readonly ArrayList tabs = new ArrayList(); //Contains TabInf for each Tab.
-        public readonly List<TabInf> tabs = new List<TabInf>(); //Contains TabInf for each Tab.
-        //public readonly ArrayList baseURLs = new ArrayList();
-        public readonly List<string> baseURLs = new List<string>();
-        public TabsList(bool PrintEnabled)
+        private static TabsList instance = null;
+        public enum PathType
         {
-            //PathType type = PathType.URL_txt;
-            //this.urlSrcPath = ReadPath(type);
-            //type = PathType.Title_txt;
-            //this.titleSrcPath = ReadPath(type);
-            //this.titleSrcPath = "C:\\Users\\Noman\\Desktop\\ChromeAndroidTabs-TITLES.txt";
-            //this.urlSrcPath = "C:\\Users\\Noman\\Desktop\\ChromeAndroidTabs-URL.txt";
-            this.TabCount = 0;
-            ProcessTabs(PrintEnabled);
+            URL_txt = 1,
+            Title_txt = 2
         }
-        
-        //public TabsList()
-        //{
-        //    string fileName = "_chromtabJSON.json";
-        //    string jsonString = File.ReadAllText("lol.json");//fileName);
-        //    BasicTabInf t1 = JsonSerializer.Deserialize(jsonString, basic))
-        //    string wow = t1.lastKnownTitle;
-            
-        //}
+        public bool TabsProcessed { get; private set; }
+        public int TabCount { get; private set; }
+        public List<TabInf> Tabs { get; private set; } //Contains TabInf for each Tab.
 
+
+        private readonly string urlSrcPath = ConfigHelper.FileNamesAndPaths.CurrentListOfURLsTxtFileName;
+        private readonly string titleSrcPath = ConfigHelper.FileNamesAndPaths.CurrentListOfTitlesTxtFileName;
+        
+
+
+
+        //public readonly ArrayList baseURLs = new ArrayList();
+        public List<string> BaseURLs { get; private set; }
+        private TabsList()
+        {
+            ResetTabList();
+        }
+        public static TabsList GetInstance()
+        {
+            if(instance == null)
+               instance = new TabsList();
+            return instance;
+        }
+        public void ResetTabList()
+        {
+            TabsProcessed = false;
+            TabCount = 0;
+            BaseURLs = new();
+            Tabs = new();
+        }
+        public void Process(List<BasicTabInf> basicTabInfs = null)
+        {
+            if(basicTabInfs==null)
+            {
+                ProcessTabsFromTxts();
+                return;
+            }
+
+            Tabs = new();
+            for(int i=0;i<basicTabInfs.Count;i++)
+            {
+                BasicTabInf bti = basicTabInfs[i];
+                Tabs.Add(new TabInf(bti.url, bti.lastKnownTitle, i + 1));
+            }
+            return;
+        }
         public string ExportToHTML(string outputfile="")
         {
             string title = "recoveredTabs (" + DateTime.Now.ToString() + ")";
@@ -71,14 +93,14 @@ namespace ChromeDroid_TabMan
                 {
                     w.WriteLine("<H1><strong>----------------- TOTAL TABS RECOVERED= {0} -----------------</strong></H1>", TabCount);
                     //NEED TO MAKE MORE EFFICIENT!! (Not need, but should!)
-                    foreach (var baseurl in baseURLs)
+                    foreach (var baseurl in BaseURLs)
                     {
                         w.Write("<H1><img width=\"20\" height=\"20\" src=\"https://{0}/favicon.ico\">", (baseurl as string));
                         w.Write(baseurl as string);
                         w.WriteLine("</H1>");
                         var sw = new StringWriter();
                         int count = 0;
-                        foreach (var tab in tabs)//NOTE TO SELF: TO DO : INEFFECCIENT AF, FIND DIFF METHOD
+                        foreach (var tab in Tabs)//NOTE TO SELF: TO DO : INEFFECCIENT AF, FIND DIFF METHOD
                         {
                             if ((tab as TabInf).baseWebsite == (baseurl as string))
                             {
@@ -138,16 +160,16 @@ namespace ChromeDroid_TabMan
                     //NEED TO MAKE MORE EFFICIENT!! (Technically, not needed but should do so!)
                     if(sort_baseURLs)
                     {
-                        baseURLs.Sort();
+                        BaseURLs.Sort();
                     }
-                    foreach (var baseurl in baseURLs)
+                    foreach (var baseurl in BaseURLs)
                     {
                         w.Write("       <DT><H3 ADD_DATE=\"" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + "\"LAST_MODIFIED=\"" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + "\">");
                         w.WriteLine((baseurl as string).Replace(".","_") + "</H3>");
 
                         var sw = new StringWriter();
                         int count = 0;
-                        foreach (var tab in tabs)//NOTE TO SELF: TO DO : INEFFECCIENT AF, FIND DIFF METHOD
+                        foreach (var tab in Tabs)//NOTE TO SELF: TO DO : INEFFECCIENT AF, FIND DIFF METHOD
                         {
                             if ((tab as TabInf).baseWebsite == (baseurl as string))
                             {
@@ -171,8 +193,11 @@ namespace ChromeDroid_TabMan
             return outputfile;
         }
 
-        private void ProcessTabs(bool PrintEnabled)
+
+        
+        private void ProcessTabsFromTxts()//uses .txt files containing URL and titles respectively for constructing the list. This has basically been deprecated.
         {
+            bool printEnabled = ConfigHelper.Logging.EnablePrintingInTabsListProcessingFromTxts;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
             int urlsRead = 0, baseURLsRead = 0, titlesRead = 0, unprocessedLines = 0;
@@ -187,23 +212,23 @@ namespace ChromeDroid_TabMan
                         titlesRead++;
                         TabInf tab = new TabInf(line, "title-to-be-implemented",++TabCount); //ADD TITLE HERE SOMEHOW!!
                         tab.lastKnownTitle = lastKnownTitle;
-                        tabs.Add(tab);
+                        Tabs.Add(tab);
                         //Might be able to get rid of the following if condition if I make a viable comparison operator,etc for sorting/grouping
                         if (line.Contains("://")) //Note to self: TO DO? : replace with try catch then inform user some entries were not normal URLs?
                         {
                             urlsRead++;
-                            if (!this.baseURLs.Contains(tab.baseWebsite))
+                            if (!this.BaseURLs.Contains(tab.baseWebsite))
                             {
                                 baseURLsRead++;
-                                this.baseURLs.Add(tab.baseWebsite);
-                                if(PrintEnabled)
+                                this.BaseURLs.Add(tab.baseWebsite);
+                                if(printEnabled)
                                 {
                                     Console.ForegroundColor = ConsoleColor.Magenta;
                                     Console.WriteLine("--new BaseURL found!--");
                                     Console.ForegroundColor = ConsoleColor.White;
                                 }
                             }
-                            if(PrintEnabled)
+                            if(printEnabled)
                             {
                                 Console.ForegroundColor = ConsoleColor.DarkGray;
                                 Console.Write("[BaseURL: "+tab.baseWebsite+"]");
@@ -221,7 +246,7 @@ namespace ChromeDroid_TabMan
                             //{
                             //    this.baseURLs.Add(tab.baseWebsite);
                             //}
-                            if (PrintEnabled)
+                            if (printEnabled)
                             {
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.WriteLine("|--UNPROCESSED LINE:--| {0} [Last Known Title: {1}]", line,lastKnownTitle);
@@ -229,7 +254,7 @@ namespace ChromeDroid_TabMan
                             }
                         }
                     }
-                    if(PrintEnabled)
+                    if(printEnabled)
                     {
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.WriteLine("Total Lines Read: {0} |||| Lines read successfully: {1} |||| Total unique BaseURLs: {2}", urlsRead + unprocessedLines, urlsRead, baseURLsRead);
@@ -238,7 +263,7 @@ namespace ChromeDroid_TabMan
                     //tabsProcessed = true;
                 }
             }
-            tabsProcessed = true;
+            TabsProcessed = true;
         }
         private static string ReadPath(PathType type)
         {

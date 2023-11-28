@@ -13,6 +13,7 @@ namespace ChromeDroid_TabMan.Auxiliary
         public static void InitializeConfig()
         {
             FileNamesAndPaths.InitializeConfig();
+            Logging.InitializeConfig();
         }
         public static class FileNamesAndPaths
         {
@@ -27,6 +28,14 @@ namespace ChromeDroid_TabMan.Auxiliary
             public static string PrevJsonNewFileName { get; private set; }
             public static string CurrentListOfURLsTxtFileName { get; private set; }
             public static string CurrentListOfTitlesTxtFileName { get; private set; }
+        }
+        public static class Logging
+        {
+            public static void InitializeConfig()
+            {
+                EnablePrintingInTabsListProcessingFromTxts = false;
+            }
+            public static bool EnablePrintingInTabsListProcessingFromTxts { get; private set; } //= false;
         }
     }
 }

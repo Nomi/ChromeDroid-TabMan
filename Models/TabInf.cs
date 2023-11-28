@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace ChromeDroid_TabMan.Models
 {
-    class TabInf : IComparable<TabInf>
+    public class TabInf : IComparable<TabInf>
     {
         [JsonIgnore]
-        public readonly int tabPosition;
+        public int tabPosition { get; set; }
         [JsonPropertyName("url")]
-        public string url;
+        public string url { get; set; }
         [JsonIgnore]
-        public readonly string currentTitle;
+        public string currentTitle { get; set; }
         [JsonIgnore]
-        public readonly string baseWebsite;
+        public string baseWebsite { get; set; }
         [JsonPropertyName("title")]
         public string lastKnownTitle;
 
@@ -29,10 +29,10 @@ namespace ChromeDroid_TabMan.Models
             tabPosition = -1;
             baseWebsite = GetBasewebsite();
         }
-        public TabInf(string url, string title, int tabPos)
+        public TabInf(string url, string lkTitle, int tabPos)
         {
             this.url = url;
-            this.lastKnownTitle = title;
+            this.lastKnownTitle = lkTitle;
             tabPosition = tabPos;
             baseWebsite = GetBasewebsite();
         }

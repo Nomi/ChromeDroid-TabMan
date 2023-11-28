@@ -10,6 +10,7 @@ using ChromeDroid_TabMan.Auxiliary;
 using Newtonsoft.Json;
 using ChromeDroid_TabMan.Models;
 using System.Linq;
+using ChromeDroid_TabMan.Data;
 
 
 //#define _USE_JQ
@@ -95,53 +96,40 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
                 text = sr.ReadToEnd();
             }
 
-            //using (FileStream fs = new FileStream(ConfigHelper.FileNamesAndPaths.JsonFileName, FileMode.Create))
-            //{
-            //    using (StreamWriter w = new StreamWriter(fs, System.Text.Encoding.UTF8))
-            //    {
-            //        w.Write(text);
-            //        w.Flush();
-            //    }
-            //}
+            ///The following is to rename old .json to .json.bak:
+            // Source file to be renamed  
+            //string sourceFile = ConfigHelper.JsonFileName;
+            // Creating FileInfo  
+            System.IO.FileInfo fileInfo = new System.IO.FileInfo(ConfigHelper.FileNamesAndPaths.JsonFileName);
+            // Checking if file exists. 
+            if (fileInfo.Exists)
+            {
+                // Move file with a new name. Hence renamed.  
+                fileInfo.MoveTo(ConfigHelper.FileNamesAndPaths.PrevJsonNewFileName);
+                //Console.WriteLine("File Renamed.");
+            }
             File.WriteAllText(ConfigHelper.FileNamesAndPaths.JsonFileName, text, System.Text.Encoding.UTF8);
         }
 
-
-        public static void GetURLtxtAndTITLEtxtFromJSON(string jsonPath = "")
+        public static List<BasicTabInf> LoadJson(string jsonPath="")
         {
-            bool usingDefaultPath = false;
+
+            //bool usingDefaultPath = false;
             if (jsonPath == "")
             {
                 // "\"" was needed for passing as argument to JQ, not needed anymore but keeping as it is.
                 jsonPath = "\"" + System.AppContext.BaseDirectory + ConfigHelper.FileNamesAndPaths.JsonFileName + "\""; //"\"" + System.AppContext.BaseDirectory + +ConfigHelper.FileNamesAndPaths.JsonFileName+ "\"";
-                usingDefaultPath = true;
+                //usingDefaultPath = true;
             }
-
-
+            
             string jsonText = File.ReadAllText(jsonPath);
-            var res = System.Text.Json.JsonSerializer.Deserialize<List<BasicTabInf>>(jsonText); //JsonConvert.DeserializeObject<>(jsonText);
 
-
-            File.WriteAllLines(ConfigHelper.FileNamesAndPaths.CurrentListOfURLsTxtFileName,res.Select(x=>x.url));//select preserves order.
-            File.WriteAllLines(ConfigHelper.FileNamesAndPaths.CurrentListOfTitlesTxtFileName, res.Select(x => x.lastKnownTitle));//select preserves order.
-
-            //To-do: inspect and maybe refactor the following:
-            if (usingDefaultPath)
-            {
-                ///The following is to rename old .json to .json.bak:
-                // Source file to be renamed  
-                //string sourceFile = ConfigHelper.JsonFileName;
-                // Creating FileInfo  
-                System.IO.FileInfo file = new System.IO.FileInfo(jsonPath);//(sourceFile);
-                                                                           // Checking if file exists. 
-                if (file.Exists)
-                {
-                    // Move file with a new name. Hence renamed.  
-                    file.MoveTo(ConfigHelper.FileNamesAndPaths.PrevJsonNewFileName);
-                    //Console.WriteLine("File Renamed.");
-                }
-            }
-
+            return System.Text.Json.JsonSerializer.Deserialize<List<BasicTabInf>>(jsonText); //JsonConvert.DeserializeObject<>(jsonText);
+        }
+        public static void GetURLtxtAndTITLEtxtFromJSON(List<BasicTabInf> basicTabInfs)
+        {
+            File.WriteAllLines(ConfigHelper.FileNamesAndPaths.CurrentListOfURLsTxtFileName, basicTabInfs.Select(x=>x.url));//select preserves order.
+            File.WriteAllLines(ConfigHelper.FileNamesAndPaths.CurrentListOfTitlesTxtFileName, basicTabInfs.Select(x => x.lastKnownTitle));//select preserves order.
         }
 
 
