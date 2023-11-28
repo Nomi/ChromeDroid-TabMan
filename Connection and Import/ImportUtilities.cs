@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using ChromeDroid_TabMan.Models;
 using System.Linq;
 using ChromeDroid_TabMan.Data;
+using AdvancedSharpAdbClient;
 
 
 //#define _USE_JQ
@@ -30,31 +31,55 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
         private static NextStepImpUtil nextStep = NextStepImpUtil.StartADB;
         public static void StartChromeAndroidJsonListServer(string adbPath)
         {
-            if (nextStep != NextStepImpUtil.StartADB)
+            //if (nextStep != NextStepImpUtil.StartADB)
+            //{
+            //    //Implement error message here
+            //    throw new NotImplementedException();
+            //}
+            //ProcessStartInfo procStartInfo;
+            //if (adbPath == string.Empty) //this if/else is just for testing right now. It can't be triggered normally, so it's fine. Will remove it some day.
+            //    procStartInfo = new ProcessStartInfo(@"C:\Program Files (x86)\Minimal ADB and Fastboot\adb.exe");
+            //else
+            //    procStartInfo = new ProcessStartInfo(adbPath);
+            //procStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            //procStartInfo.CreateNoWindow = true;
+            //procStartInfo.RedirectStandardInput = true;
+            //procStartInfo.RedirectStandardOutput = true;
+            //procStartInfo.RedirectStandardError = true;
+            //procStartInfo.UseShellExecute = false;
+            ////procStartInfo.FileName = "adb.exe";
+            //procStartInfo.Arguments = "-d forward tcp:9222 localabstract:chrome_devtools_remote";
+
+            ////procStartInfo.WorkingDirectory = "C:\\Program Files(x86)\\Minimal ADB and Fastboot\\";
+            //proc = new Process();
+            //proc.StartInfo = procStartInfo;
+            //proc.Start();
+            ////string result= proc.StandardOutput.ReadLine() + "\n";
+            //nextStep = NextStepImpUtil.ConnectToDevice;
+            //proc.Dispose();
+
+
+
+            if (!AdbServer.Instance.GetStatus().IsRunning)
             {
-                //Implement error message here
-                throw new NotImplementedException();
+                AdbServer server = new AdbServer();
+                StartServerResult result = server.StartServer(adbPath, false);
+                if (result != StartServerResult.Started)
+                {
+                    throw new Exception("Can't start adb server");
+                }
             }
-            ProcessStartInfo procStartInfo;
-            if (adbPath == string.Empty) //this if/else is just for testing right now. It can't be triggered normally, so it's fine. Will remove it some day.
-                procStartInfo = new ProcessStartInfo(@"C:\Program Files (x86)\Minimal ADB and Fastboot\adb.exe");
-            else
-                procStartInfo = new ProcessStartInfo(adbPath);
-            procStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            procStartInfo.CreateNoWindow = true;
-            procStartInfo.RedirectStandardInput = true;
-            procStartInfo.RedirectStandardOutput = true;
-            procStartInfo.RedirectStandardError = true;
-            procStartInfo.UseShellExecute = false;
-            //procStartInfo.FileName = "adb.exe";
-            procStartInfo.Arguments = "-d forward tcp:9222 localabstract:chrome_devtools_remote";
-            //procStartInfo.WorkingDirectory = "C:\\Program Files(x86)\\Minimal ADB and Fastboot\\";
-            proc = new Process();
-            proc.StartInfo = procStartInfo;
-            proc.Start();
-            //string result= proc.StandardOutput.ReadLine() + "\n";
-            nextStep = NextStepImpUtil.ConnectToDevice;
-            proc.Dispose();
+
+            AdbClient client;
+
+            DeviceData device;
+
+            client = new AdbClient();
+            client.Connect("127.0.0.1:62001");
+            device = client.GetDevices().FirstOrDefault(); // Get first connected device
+            client.StartApp(device, "com.android.chrome");
+            client.CreateForward(device,"tcp:9222", "localabstract:chrome_devtools_remote",true);//procStartInfo.Arguments = " - d forward tcp:9222 localabstract:chrome_devtools_remote";
+
         }
 
         //public static void ConnectToDevice()
@@ -117,8 +142,8 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             //bool usingDefaultPath = false;
             if (jsonPath == "")
             {
-                // "\"" was needed for passing as argument to JQ, not needed anymore but keeping as it is.
-                jsonPath = "\"" + System.AppContext.BaseDirectory + ConfigHelper.FileNamesAndPaths.JsonFileName + "\""; //"\"" + System.AppContext.BaseDirectory + +ConfigHelper.FileNamesAndPaths.JsonFileName+ "\"";
+                // "\"" was needed for passing as argument to JQ, not needed anymore.
+                jsonPath =  System.AppContext.BaseDirectory + ConfigHelper.FileNamesAndPaths.JsonFileName; //"\"" + System.AppContext.BaseDirectory + +ConfigHelper.FileNamesAndPaths.JsonFileName+ "\"";
                 //usingDefaultPath = true;
             }
             

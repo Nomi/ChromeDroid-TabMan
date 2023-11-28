@@ -1,5 +1,4 @@
-﻿
-namespace ChromeDroid_TabMan
+﻿namespace ChromeDroid_TabMan
 {
     partial class MainForm
     {
