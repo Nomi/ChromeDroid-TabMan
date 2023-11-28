@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="JQ.NET" Version="1.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
   </ItemGroup>
 
 </Project>

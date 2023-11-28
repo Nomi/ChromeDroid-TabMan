@@ -19,7 +19,7 @@ namespace ChromeDroid_TabMan.Models
         [JsonIgnore]
         public string baseWebsite { get; set; }
         [JsonPropertyName("title")]
-        public string lastKnownTitle;
+        public string lastKnownTitle { get; set; }
 
         public TabInf(string url, string lkTitle)
         {

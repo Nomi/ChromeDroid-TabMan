@@ -37,5 +37,13 @@ namespace ChromeDroid_TabMan.Auxiliary
             }
             public static bool EnablePrintingInTabsListProcessingFromTxts { get; private set; } //= false;
         }
+        public static class Database
+        {
+            public static void InitializeConfig() 
+            {
+                DbPath = "_LastTabs.db";
+            }
+            public static string DbPath { get; private set; }
+        }
     }
 }
