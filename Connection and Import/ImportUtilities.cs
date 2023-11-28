@@ -75,10 +75,10 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             DeviceData device;
 
             client = new AdbClient();
-            client.Connect("127.0.0.1:62001");
+            client.Connect(ConfigHelper.ADB.HostURL);
             device = client.GetDevices().FirstOrDefault(); // Get first connected device
-            client.StartApp(device, "com.android.chrome");
-            client.CreateForward(device,"tcp:9222", "localabstract:chrome_devtools_remote",true);//procStartInfo.Arguments = " - d forward tcp:9222 localabstract:chrome_devtools_remote";
+            client.StartApp(device, ConfigHelper.ADB.ChromePackageName);
+            client.CreateForward(device,ConfigHelper.ADB.ForwardParameter_Local,ConfigHelper.ADB.ForwardParameter_Remote,true);//procStartInfo.Arguments = " - d forward tcp:9222 localabstract:chrome_devtools_remote";
 
         }
 
@@ -109,7 +109,7 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             //    //Implement error message here
             //    throw new NotImplementedException();
             //}
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:9222/json/list");
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(ConfigHelper.ADB.TabsJsonListURL);
             httpWebRequest.Method = WebRequestMethods.Http.Get;
             httpWebRequest.Accept = "application/json";
             httpWebRequest.ContentType = "application/json; charset=utf-8";

@@ -10,7 +10,7 @@ namespace ChromeDroid_TabMan.Auxiliary
 {
     public static class ConfigHelper
     {
-        public static string ExportFilesPartialDefaultName { get { return "recoveredTabs(" + DateTime.Now.ToString("dd-mm-yy _ HH-mm-ss")+")";} }
+        public static string ExportFilesPartialDefaultName { get { return "recoveredTabs(" + DateTime.Now.ToString("dd-mm-yy__HH-mm-ss")+")";} }
         public static void InitializeConfig()
         {
             FileNamesAndPaths.InitializeConfig();
@@ -50,6 +50,14 @@ namespace ChromeDroid_TabMan.Auxiliary
                 //DbPath = "_LastTabs.db";
             }
             //public static string DbPath { get; private set; }
+        }
+        public static class ADB
+        {
+            public static string HostURL { get; private set; } = "127.0.0.1:62001";
+            public static string ChromePackageName { get; private set; } = "com.android.chrome";
+            public static string ForwardParameter_Local { get; private set; } = "tcp:9222";
+            public static string ForwardParameter_Remote { get; private set; } = "localabstract:chrome_devtools_remote";
+            public static string TabsJsonListURL { get; private set; } = "http://localhost:9222/json/list";
         }
     }
 }
