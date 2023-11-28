@@ -130,6 +130,7 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             if (fileInfo.Exists)
             {
                 // Move file with a new name. Hence renamed.  
+                File.Delete(ConfigHelper.FileNamesAndPaths.PrevJsonNewFileName);
                 fileInfo.MoveTo(ConfigHelper.FileNamesAndPaths.PrevJsonNewFileName);
                 //Console.WriteLine("File Renamed.");
             }
