@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using ChromeDroid_TabMan.Auxiliary;
 using ChromeDroid_TabMan.Models;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 //using JQ.Net;
 //using JQ.Net.JQ;
 
@@ -25,7 +26,7 @@ namespace ChromeDroid_TabMan.Data
             Title_txt = 2
         }
         public bool TabsProcessed { get; private set; }
-        public int TabCount { get; private set; }
+        public int TabCount { get { return Tabs.Count; } }
         public List<TabInf> Tabs { get; private set; } //Contains TabInf for each Tab.
 
 
@@ -50,7 +51,6 @@ namespace ChromeDroid_TabMan.Data
         public void ResetTabList()
         {
             TabsProcessed = false;
-            TabCount = 0;
             BaseURLs = new();
             Tabs = new();
         }
@@ -63,31 +63,42 @@ namespace ChromeDroid_TabMan.Data
             }
 
             Tabs = new();
+            BaseURLs = new();
+            HashSet<string> baseUrlsEncountered = new();
             for(int i=0;i<basicTabInfs.Count;i++)
             {
                 BasicTabInf bti = basicTabInfs[i];
                 Tabs.Add(new TabInf(bti.url, bti.lastKnownTitle, i + 1));
+                if (!baseUrlsEncountered.Contains(Tabs[i].baseWebsite))
+                {
+                    baseUrlsEncountered.Add(Tabs[i].baseWebsite);
+                    BaseURLs.Add(Tabs[i].baseWebsite);
+                }
             }
             return;
         }
-        public string ExportToHTML(string outputfile="")
+
+        public string ExportToSqliteDB(string outputFile="")
+        {
+            if (outputFile.Length == 0 || !outputFile.Trim('"').EndsWith(".html"))
+                outputFile = ConfigHelper.FileNamesAndPaths.OutputPathDefaultExportDirectory + ConfigHelper.Database.DbFileName;
+            
+            TabsDbContext tabsDbContext = new(outputFile);
+            System.IO.File.Delete(outputFile);
+            tabsDbContext.Database.EnsureCreated();
+            tabsDbContext.Tabs.AddRange(TabsList.GetInstance().Tabs);
+            tabsDbContext.SaveChanges();
+
+            return outputFile;
+        }
+        public string ExportToGroupedListHTML(string outputFile="")
         {
             string title = "recoveredTabs (" + DateTime.Now.ToString() + ")";
-            string outputBaseDIR = string.Empty;
-            if (outputfile.Length == 0 || !outputfile.Trim('"').EndsWith(".html"))
-            {
-                outputfile = "LIST - " + title + ".html";
-                outputfile = outputfile.Replace("/", "-");
-                outputfile = outputfile.Replace(":", "-");
-                outputBaseDIR = System.AppContext.BaseDirectory + @"Exports\";
-                //if(!Directory.Exists(outputBaseDIR)) //turns out, don't need this for Directory.CreateDirectory.
-                //{
-                //    Directory.CreateDirectory(outputBaseDIR);
-                //}
-                Directory.CreateDirectory(outputBaseDIR);
-                outputfile = outputBaseDIR + outputfile;
-            }
-            using (FileStream fs = new FileStream(outputfile, FileMode.Create))
+
+            if (outputFile.Length == 0 || !outputFile.Trim('"').EndsWith(".html"))
+                outputFile = ConfigHelper.FileNamesAndPaths.OutputPathDefaultExportDirectory + ConfigHelper.FileNamesAndPaths.ListDefaultFileName;
+
+            using (FileStream fs = new FileStream(outputFile, FileMode.Create))
             {
                 using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
                 {
@@ -119,28 +130,17 @@ namespace ChromeDroid_TabMan.Data
                 }
             }
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Written to file: " + outputfile + " .");
+            Console.WriteLine("Written to file: " + outputFile + " .");
             Console.ForegroundColor = ConsoleColor.White;
-            return outputfile;
+            return outputFile;
         }
 
         public string ExportToNetscapeBookmarksHTML(string outputfile = "", bool sort_baseURLs=false)
         {
             string title = "recoveredTabs (" + DateTime.Now.ToString() + ")";
-            string outputBaseDIR = string.Empty;
             if (outputfile.Length == 0 || !outputfile.Trim('"').EndsWith(".html"))
-            {
-                outputfile = "Bookmarks - " + title+ ".html";
-                outputfile = outputfile.Replace("/", "-");
-                outputfile = outputfile.Replace(":", "-");
-                outputBaseDIR = System.AppContext.BaseDirectory + @"Exports\";
-                //if(!Directory.Exists(outputBaseDIR)) //turns out, don't need this for Directory.CreateDirectory.
-                //{
-                //    Directory.CreateDirectory(outputBaseDIR);
-                //}
-                Directory.CreateDirectory(outputBaseDIR);
-                outputfile = outputBaseDIR+ outputfile;
-            }
+                outputfile = ConfigHelper.FileNamesAndPaths.OutputPathDefaultExportDirectory + ConfigHelper.FileNamesAndPaths.BookmarksDefaultFileName;
+
             using (FileStream fs = new FileStream(outputfile, FileMode.Create))
             {
                 using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
@@ -210,7 +210,7 @@ namespace ChromeDroid_TabMan.Data
                     {
                         string lastKnownTitle = titleReader.ReadLine();
                         titlesRead++;
-                        TabInf tab = new TabInf(line, "title-to-be-implemented",++TabCount); //ADD TITLE HERE SOMEHOW!!
+                        TabInf tab = new TabInf(line, "title-to-be-implemented", 1+TabCount);//++TabCount); //ADD TITLE HERE SOMEHOW!!
                         tab.lastKnownTitle = lastKnownTitle;
                         Tabs.Add(tab);
                         //Might be able to get rid of the following if condition if I make a viable comparison operator,etc for sorting/grouping

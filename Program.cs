@@ -5,6 +5,7 @@ using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChromeDroid_TabMan.Auxiliary;
+using System.IO;
 
 namespace ChromeDroid_TabMan
 {
@@ -16,8 +17,9 @@ namespace ChromeDroid_TabMan
         [STAThread]
         static void Main()
         {
-            /// My addition:
+            /// My additions:
             ConfigHelper.InitializeConfig();
+            Directory.CreateDirectory(ConfigHelper.FileNamesAndPaths.OutputPathDefaultExportDirectory);
 
             /// Pre-existing code:
             Application.SetHighDpiMode(HighDpiMode.SystemAware);

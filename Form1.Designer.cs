@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabListTree = new System.Windows.Forms.TreeView();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPosList = new System.Windows.Forms.TabPage();
@@ -38,16 +38,17 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.button_ExportAsSQLiteDB = new System.Windows.Forms.Button();
+            this.button_ExportAsBookmarks = new System.Windows.Forms.Button();
+            this.button_exportListHTML = new System.Windows.Forms.Button();
             this.importAndProcessGroupbox = new System.Windows.Forms.GroupBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.button_ImportAndProcess = new System.Windows.Forms.Button();
             this.connectGroupBox = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.button_connectfetchjson = new System.Windows.Forms.Button();
             this.button_selectjson = new System.Windows.Forms.Button();
-            this.button_exportListHTML = new System.Windows.Forms.Button();
-            this.button_ExportAsBookmarks = new System.Windows.Forms.Button();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.tabControl1.SuspendLayout();
             this.tabPosList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -96,23 +97,23 @@
             // 
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.LightBlue;
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.LightBlue;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.GridColor = System.Drawing.SystemColors.ControlDarkDark;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
@@ -171,23 +172,65 @@
             // 
             // tableLayoutPanel3
             // 
+            this.tableLayoutPanel3.AutoSize = true;
+            this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.button_ExportAsSQLiteDB, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.button_ExportAsBookmarks, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.button_exportListHTML, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.linkLabel1, 0, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 23);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.Size = new System.Drawing.Size(260, 81);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
+            // button_ExportAsSQLiteDB
+            // 
+            this.button_ExportAsSQLiteDB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button_ExportAsSQLiteDB.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.button_ExportAsSQLiteDB.ForeColor = System.Drawing.Color.Black;
+            this.button_ExportAsSQLiteDB.Location = new System.Drawing.Point(3, 67);
+            this.button_ExportAsSQLiteDB.Name = "button_ExportAsSQLiteDB";
+            this.button_ExportAsSQLiteDB.Size = new System.Drawing.Size(254, 26);
+            this.button_ExportAsSQLiteDB.TabIndex = 2;
+            this.button_ExportAsSQLiteDB.Text = "Export as SQLite DB";
+            this.button_ExportAsSQLiteDB.UseVisualStyleBackColor = true;
+            this.button_ExportAsSQLiteDB.Click += new System.EventHandler(this.button_ExportAsSQLiteDB_Click);
+            // 
+            // button_ExportAsBookmarks
+            // 
+            this.button_ExportAsBookmarks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button_ExportAsBookmarks.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.button_ExportAsBookmarks.ForeColor = System.Drawing.Color.Black;
+            this.button_ExportAsBookmarks.Location = new System.Drawing.Point(3, 35);
+            this.button_ExportAsBookmarks.Name = "button_ExportAsBookmarks";
+            this.button_ExportAsBookmarks.Size = new System.Drawing.Size(254, 26);
+            this.button_ExportAsBookmarks.TabIndex = 1;
+            this.button_ExportAsBookmarks.Text = "Export as Bookmarks";
+            this.button_ExportAsBookmarks.UseVisualStyleBackColor = true;
+            this.button_ExportAsBookmarks.Click += new System.EventHandler(this.button_ExportAsBookmarks_Click);
+            // 
+            // button_exportListHTML
+            // 
+            this.button_exportListHTML.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button_exportListHTML.Font = new System.Drawing.Font("Segoe UI Semilight", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_exportListHTML.ForeColor = System.Drawing.Color.Black;
+            this.button_exportListHTML.Location = new System.Drawing.Point(3, 3);
+            this.button_exportListHTML.Name = "button_exportListHTML";
+            this.button_exportListHTML.Size = new System.Drawing.Size(254, 26);
+            this.button_exportListHTML.TabIndex = 0;
+            this.button_exportListHTML.Text = "Export as List (grouped) [HTML]";
+            this.button_exportListHTML.UseVisualStyleBackColor = true;
+            this.button_exportListHTML.Click += new System.EventHandler(this.button_exportListHTML_Click);
+            // 
             // importAndProcessGroupbox
             // 
+            this.importAndProcessGroupbox.Controls.Add(this.linkLabel1);
             this.importAndProcessGroupbox.Controls.Add(this.button_ImportAndProcess);
             this.importAndProcessGroupbox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.importAndProcessGroupbox.Font = new System.Drawing.Font("Segoe UI", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
@@ -198,6 +241,21 @@
             this.importAndProcessGroupbox.TabIndex = 3;
             this.importAndProcessGroupbox.TabStop = false;
             this.importAndProcessGroupbox.Text = "Tabs Import and Processing";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Font = new System.Drawing.Font("Segoe UI Semilight", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            this.linkLabel1.LinkColor = System.Drawing.Color.LightSkyBlue;
+            this.linkLabel1.Location = new System.Drawing.Point(95, 87);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(87, 17);
+            this.linkLabel1.TabIndex = 3;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "nomi.github.io";
+            this.linkLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button_ImportAndProcess
             // 
@@ -288,46 +346,6 @@
             this.button_selectjson.UseVisualStyleBackColor = true;
             this.button_selectjson.Click += new System.EventHandler(this.button_selectjson_Click);
             // 
-            // button_exportListHTML
-            // 
-            this.button_exportListHTML.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button_exportListHTML.Font = new System.Drawing.Font("Segoe UI Semilight", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_exportListHTML.ForeColor = System.Drawing.Color.Black;
-            this.button_exportListHTML.Location = new System.Drawing.Point(3, 3);
-            this.button_exportListHTML.Name = "button_exportListHTML";
-            this.button_exportListHTML.Size = new System.Drawing.Size(254, 26);
-            this.button_exportListHTML.TabIndex = 0;
-            this.button_exportListHTML.Text = "Export as List (grouped)";
-            this.button_exportListHTML.UseVisualStyleBackColor = true;
-            this.button_exportListHTML.Click += new System.EventHandler(this.button_exportListHTML_Click);
-            // 
-            // button_ExportAsBookmarks
-            // 
-            this.button_ExportAsBookmarks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button_ExportAsBookmarks.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button_ExportAsBookmarks.ForeColor = System.Drawing.Color.Black;
-            this.button_ExportAsBookmarks.Location = new System.Drawing.Point(3, 35);
-            this.button_ExportAsBookmarks.Name = "button_ExportAsBookmarks";
-            this.button_ExportAsBookmarks.Size = new System.Drawing.Size(254, 26);
-            this.button_ExportAsBookmarks.TabIndex = 1;
-            this.button_ExportAsBookmarks.Text = "Export as Bookmarks";
-            this.button_ExportAsBookmarks.UseVisualStyleBackColor = true;
-            this.button_ExportAsBookmarks.Click += new System.EventHandler(this.button_ExportAsBookmarks_Click);
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.linkLabel1.Font = new System.Drawing.Font("Segoe UI Semilight", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-            this.linkLabel1.LinkColor = System.Drawing.Color.LightSkyBlue;
-            this.linkLabel1.Location = new System.Drawing.Point(3, 64);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(254, 17);
-            this.linkLabel1.TabIndex = 2;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "nomi.github.io";
-            this.linkLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -343,9 +361,10 @@
             this.tabTreeView.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
             this.importAndProcessGroupbox.ResumeLayout(false);
+            this.importAndProcessGroupbox.PerformLayout();
             this.connectGroupBox.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -373,6 +392,7 @@
         private System.Windows.Forms.Button button_ExportAsBookmarks;
         private System.Windows.Forms.Button button_exportListHTML;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Button button_ExportAsSQLiteDB;
     }
 }
 

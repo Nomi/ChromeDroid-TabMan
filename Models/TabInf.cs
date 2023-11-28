@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace ChromeDroid_TabMan.Models
 {
     public class TabInf : IComparable<TabInf>
     {
+        [Key]
         [JsonIgnore]
         public int tabPosition { get; set; }
         [JsonPropertyName("url")]
@@ -21,6 +23,8 @@ namespace ChromeDroid_TabMan.Models
         [JsonPropertyName("title")]
         public string lastKnownTitle { get; set; }
 
+
+        public TabInf() { } //exists for entity framework SQLite DB operations.
         public TabInf(string url, string lkTitle)
         {
             this.url = url;

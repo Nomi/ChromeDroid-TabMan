@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChromeDroid_TabMan.ConnectionAndImport;
 using ChromeDroid_TabMan.Data;
 using ChromeDroid_TabMan.Models;
+using Microsoft.EntityFrameworkCore;
+using ChromeDroid_TabMan.Auxiliary;
 
 namespace ChromeDroid_TabMan
 {
@@ -174,7 +177,7 @@ namespace ChromeDroid_TabMan
         {
             //add select path dialog box??
             var tabsList = TabsList.GetInstance();
-            string outputPath =  tabsList.ExportToHTML();
+            string outputPath =  tabsList.ExportToGroupedListHTML();
             if(groupBox1.ForeColor!=Color.Lime)
             {
                 groupBox1.ForeColor = Color.Yellow;
@@ -213,6 +216,15 @@ namespace ChromeDroid_TabMan
 
             connectGroupBox.ForeColor = Color.Lime;
             importAndProcessGroupbox.ForeColor = Color.Orange;
+        }
+
+        private void button_ExportAsSQLiteDB_Click(object sender, EventArgs e)
+        {
+            //add select path dialog box??
+            var tabsList = TabsList.GetInstance();
+            string outputPath = tabsList.ExportToSqliteDB();
+            groupBox1.ForeColor = Color.Lime;
+            MessageBox.Show("The SQLite3 Database has been exported to: " + outputPath, "Bookmarks Exported!", MessageBoxButtons.OK);
         }
     }
 
