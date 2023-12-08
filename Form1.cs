@@ -9,6 +9,8 @@ using ChromeDroid_TabMan.Data;
 using ChromeDroid_TabMan.Models;
 using Microsoft.EntityFrameworkCore;
 using ChromeDroid_TabMan.Auxiliary;
+using AdvancedSharpAdbClient;
+using ChromeDroid_TabMan.Connection_and_Import;
 
 namespace ChromeDroid_TabMan
 {
@@ -139,8 +141,10 @@ namespace ChromeDroid_TabMan
             string adbPath = string.Empty;
             adbPath = ImportUtilities.GetADBPathDialog();
             if (adbPath == "-1") return;
-            ImportUtilities.StartChromeAndroidJsonListServer(adbPath);
-            ImportUtilities.DownloadTabListJSON();
+            //IAdbConnector adbConnector = new StaticSocketNameChromiumAdbConnector(adbPath, ConfigHelper.ADB.Chrome_PackageName, ConfigHelper.ADB.Chrome_ForwardParameter_Remote);
+            IAdbConnector adbConnector = new DynamicSocketNamePidAtEndChromiumAdbConnector(adbPath, ConfigHelper.ADB.Edge_PackageName, ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd);
+            ITabsJsonFetcher tabsJsonFetcher = new AdbTabsJsonFetcher(adbConnector);
+            var res = tabsJsonFetcher.FetchTabsJson();
 
             connectGroupBox.ForeColor = Color.Lime;
             importAndProcessGroupbox.ForeColor = Color.Orange;
@@ -201,18 +205,8 @@ namespace ChromeDroid_TabMan
             connectGroupBox.ForeColor = Color.Orange;
             MessageBox.Show("Button functionality may not be fully stable.", "!!! WORK IN PROGRESS !!!", MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
 
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "JSON and JSON.BAK files (*.json, *.json.bak)|*.json;*.json.bak|All Files (*.*)|*.*";
-                openFileDialog.FilterIndex = 1;
-                openFileDialog.RestoreDirectory = true;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    manuallySetJsonLocation = openFileDialog.FileName;
-                }
-            }
+            ITabsJsonFetcher tabsJsonFetcher = new SelectFileDialogTabsJsonFetcher();
+            manuallySetJsonLocation = tabsJsonFetcher.FetchTabsJson();
 
             connectGroupBox.ForeColor = Color.Lime;
             importAndProcessGroupbox.ForeColor = Color.Orange;
