@@ -10,6 +10,8 @@ namespace ChromeDroid_TabMan.Auxiliary
 {
     public static class ConfigHelper
     {
+        public static bool SortGroupsInGroupedHtmlAndNetscapeBookmarksAlphabetically = true;
+        public static string UnidentifiedBaseUrlString => "**Unidentiffied BaseURLs**";
         public static string ExportFilesPartialDefaultName { get { return "recoveredTabs(" + DateTime.Now.ToString("dd-mm-yy__HH-mm-ss")+")";} }
         public static void InitializeConfig()
         {
@@ -19,18 +21,19 @@ namespace ChromeDroid_TabMan.Auxiliary
         }
         public static class FileNamesAndPaths
         {
-            public static string OutputPathDefaultExportDirectory { get; private set; } = System.AppContext.BaseDirectory + @"Exports\";
-            public static string BookmarksDefaultFileName { get { return "Bookmarks -" + ExportFilesPartialDefaultName + ".html"; } }
-            public static string ListDefaultFileName { get { return "LIST -" + ExportFilesPartialDefaultName + ".html"; } }
+            public static string OutputPathDefaultExportDirectory => System.AppContext.BaseDirectory + @"Exports\";
+            public static string BookmarksDefaultFileName => "Bookmarks -" + ExportFilesPartialDefaultName + ".html";
+            public static string ListDefaultFileName => "LIST -" + ExportFilesPartialDefaultName + ".html";
             public static void InitializeConfig()
             {
-                JsonFileName = "_chromtabJSON.json";
-                PrevJsonNewFileName = JsonFileName + ".bak";
+                OutputJsonFileName = "_chromtabJSON.json";
+                PrevOutputJsonNewFileName = OutputJsonFileName + ".bak";
                 CurrentListOfURLsTxtFileName = "CurrentListOfURLs.txt";
                 CurrentListOfTitlesTxtFileName = "CurrentListOfTitles.txt";
             }
-            public static string JsonFileName { get; private set; }
-            public static string PrevJsonNewFileName { get; private set; }
+            public static string OutputJsonFileName { get; private set; }
+            public static string BackUpExtensionWithDot => ".bak";
+            public static string PrevOutputJsonNewFileName { get; private set; }
             public static string CurrentListOfURLsTxtFileName { get; private set; }
             public static string CurrentListOfTitlesTxtFileName { get; private set; }
         }
@@ -44,7 +47,8 @@ namespace ChromeDroid_TabMan.Auxiliary
         }
         public static class Database
         {
-            public static string DbFileName {   get { return "SQLite DB -" + ExportFilesPartialDefaultName + ".sqlite3.db";}  }
+            public static string DbFileExtensionWithDot => ".sqlite3.db";
+            public static string DbFileName => "SQLite DB -" + ExportFilesPartialDefaultName + DbFileExtensionWithDot;
             public static void InitializeConfig() 
             {
                 //DbPath = "_LastTabs.db";
@@ -53,11 +57,24 @@ namespace ChromeDroid_TabMan.Auxiliary
         }
         public static class ADB
         {
-            public static string HostURL { get; private set; } = "127.0.0.1:62001";
-            public static string ChromePackageName { get; private set; } = "com.android.chrome";
-            public static string ForwardParameter_Local { get; private set; } = "tcp:9222";
-            public static string ForwardParameter_Remote { get; private set; } = "localabstract:chrome_devtools_remote";
-            public static string TabsJsonListURL { get; private set; } = "http://localhost:9222/json/list";
+            public static string HostURL => "127.0.0.1:62001";
+            public static string Chrome_PackageName => "com.android.chrome";
+            public static string SamsungInternet_PackageName => "com.sec.android.app.sbrowser";
+            public static string Opera_PackageName => "com.opera.browser";
+            public static string Edge_PackageName => "com.microsoft.emmx";
+            public static string Brave_PackageName => "com.brave.browser";
+            public static string LocalHostString => "localhost";
+            public static string ForwardParameter_Local_PortOnly => "9222";
+            public static string ForwardParameter_Local => "tcp:"+ForwardParameter_Local_PortOnly;
+            public static string SubUrlPathForTabsJsonList => "/json/list";
+            public static string TabsJsonListURL => "http://" + LocalHostString + ":" + ForwardParameter_Local_PortOnly + SubUrlPathForTabsJsonList;
+            public static string Chrome_ForwardParameter_Remote => "localabstract:chrome_devtools_remote";
+            public static string SamsungInternet_ForwardParameter_Remote => "localabstract:Terrace_devtools_remote";
+            public static string Opera_ForwardParameter_Remote => "localabstract:com.opera.browser.devtools";
+            private static string EdgeAndBrave_ExceptionMessage_For_ForwardParameter_Remote => "For Edge and Brave, the ForwardParameter_Remote is the concatenation of \"localabstract:chrome_devtools_remote_\" with the process ID of the process of the browser instance at that time (can be found using pidof command).";
+            public static string Edge_ForwardParameter_Remote => throw new Exception(EdgeAndBrave_ExceptionMessage_For_ForwardParameter_Remote);
+            public static string Brave_ForwardParameter_Remote => throw new Exception(EdgeAndBrave_ExceptionMessage_For_ForwardParameter_Remote);
+            public static string EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd => Chrome_ForwardParameter_Remote;
         }
     }
 }

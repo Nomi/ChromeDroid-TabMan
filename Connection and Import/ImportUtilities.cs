@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Text.Json;
 using ChromeDroid_TabMan.Auxiliary;
 using Newtonsoft.Json;
-using ChromeDroid_TabMan.Models;
 using System.Linq;
 using ChromeDroid_TabMan.Data;
 using AdvancedSharpAdbClient;
+using ChromeDroid_TabMan.Connection_and_Import;
+using ChromeDroid_TabMan.DTOs;
 
 
 //#define _USE_JQ
@@ -29,87 +30,47 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
         };
         private static System.Diagnostics.Process proc = null;
         private static NextStepImpUtil nextStep = NextStepImpUtil.StartADB;
-        public static void StartChromeAndroidJsonListServer(string adbPath)
+
+        public struct ClientAndDevice_Adb
         {
-            //if (nextStep != NextStepImpUtil.StartADB)
-            //{
-            //    //Implement error message here
-            //    throw new NotImplementedException();
-            //}
-            //ProcessStartInfo procStartInfo;
-            //if (adbPath == string.Empty) //this if/else is just for testing right now. It can't be triggered normally, so it's fine. Will remove it some day.
-            //    procStartInfo = new ProcessStartInfo(@"C:\Program Files (x86)\Minimal ADB and Fastboot\adb.exe");
-            //else
-            //    procStartInfo = new ProcessStartInfo(adbPath);
-            //procStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            //procStartInfo.CreateNoWindow = true;
-            //procStartInfo.RedirectStandardInput = true;
-            //procStartInfo.RedirectStandardOutput = true;
-            //procStartInfo.RedirectStandardError = true;
-            //procStartInfo.UseShellExecute = false;
-            ////procStartInfo.FileName = "adb.exe";
-            //procStartInfo.Arguments = "-d forward tcp:9222 localabstract:chrome_devtools_remote";
-
-            ////procStartInfo.WorkingDirectory = "C:\\Program Files(x86)\\Minimal ADB and Fastboot\\";
-            //proc = new Process();
-            //proc.StartInfo = procStartInfo;
-            //proc.Start();
-            ////string result= proc.StandardOutput.ReadLine() + "\n";
-            //nextStep = NextStepImpUtil.ConnectToDevice;
-            //proc.Dispose();
-
-
-
-            if (!AdbServer.Instance.GetStatus().IsRunning)
-            {
-                AdbServer server = new AdbServer();
-                StartServerResult result = server.StartServer(adbPath, false);
-                if (result != StartServerResult.Started)
-                {
-                    throw new Exception("Can't start adb server");
-                }
-            }
-
+            public AdbClient client;
+            public DeviceData device;
+        }
+        public static ClientAndDevice_Adb ConnectAndGetAdbClientAndDevice(string adbPath)
+        {
             AdbClient client;
-
             DeviceData device;
 
             client = new AdbClient();
             client.Connect(ConfigHelper.ADB.HostURL);
             device = client.GetDevices().FirstOrDefault(); // Get first connected device
-            client.StartApp(device, ConfigHelper.ADB.ChromePackageName);
-            client.CreateForward(device,ConfigHelper.ADB.ForwardParameter_Local,ConfigHelper.ADB.ForwardParameter_Remote,true);//procStartInfo.Arguments = " - d forward tcp:9222 localabstract:chrome_devtools_remote";
 
+            ClientAndDevice_Adb clientAndDevice_Adb = new ClientAndDevice_Adb();
+            clientAndDevice_Adb.client = client;
+            clientAndDevice_Adb.device = device;
+            return clientAndDevice_Adb;
+        }
+        public static string StartChromeAndroidJsonListServer(string adbPath,string browserPackageName,string browserRemoteForwardParameter)
+        {
+            ClientAndDevice_Adb clientAndDevice_Adb = ImportUtilities.ConnectAndGetAdbClientAndDevice(adbPath);
+            AdbClient client = clientAndDevice_Adb.client;
+            DeviceData device = clientAndDevice_Adb.device;
+
+            client.StartApp(device, browserPackageName);
+
+            string forwardParamLocal = ConfigHelper.ADB.ForwardParameter_Local;
+            client.CreateForward(device,forwardParamLocal,browserRemoteForwardParameter,true);//procStartInfo.Arguments = " - d forward tcp:9222 localabstract:chrome_devtools_remote";
+            return ConfigHelper.ADB.TabsJsonListURL;
         }
 
-        //public static void ConnectToDevice()
-        //{
-        //    if (nextStep != NextStepImpUtil.ConnectToDevice)
-        //    {
-        //        //Implement error message here
-        //        throw new NotImplementedException();
-        //    }
-        //    proc.StandardInput.WriteLine("cd \"C:\\Program Files(x86)\\Minimal ADB and Fastboot\"");
-        //    proc.StandardInput.WriteLine("./adb.exe devices");
-        //    string result = "";
-        //    int i = 0;
-        //    while(i!=5)//!proc.StandardOutput.EndOfStream)
-        //    {
-        //        result += proc.StandardOutput.ReadLine()+ "\n";
-        //        result += proc.StandardOutput.ReadLine() + "\n";
-        //        i++;
-        //    }
-        //    result.ToLower();
-        //}
-
-        public static void DownloadTabListJSON()
+        public static string DownloadTabListJSON(string tabsJsonUrl="", string outputJsonFileName="")
         {
-            //if(nextStep==NextStepImpUtil.StartADB)
-            //{
-            //    //Implement error message here
-            //    throw new NotImplementedException();
-            //}
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(ConfigHelper.ADB.TabsJsonListURL);
+            if (tabsJsonUrl == "")
+                tabsJsonUrl = ConfigHelper.ADB.TabsJsonListURL;
+            if (outputJsonFileName == "")
+                tabsJsonUrl = ConfigHelper.FileNamesAndPaths.OutputJsonFileName;
+
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(tabsJsonUrl);
             httpWebRequest.Method = WebRequestMethods.Http.Get;
             httpWebRequest.Accept = "application/json";
             httpWebRequest.ContentType = "application/json; charset=utf-8";
@@ -124,17 +85,20 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             ///The following is to rename old .json to .json.bak:
             // Source file to be renamed  
             //string sourceFile = ConfigHelper.JsonFileName;
+            string prevOutPutJsonFileName = outputJsonFileName + ConfigHelper.FileNamesAndPaths.BackUpExtensionWithDot;
             // Creating FileInfo  
-            System.IO.FileInfo fileInfo = new System.IO.FileInfo(ConfigHelper.FileNamesAndPaths.JsonFileName);
+            System.IO.FileInfo fileInfo = new System.IO.FileInfo(outputJsonFileName);
             // Checking if file exists. 
             if (fileInfo.Exists)
             {
                 // Move file with a new name. Hence renamed.  
-                File.Delete(ConfigHelper.FileNamesAndPaths.PrevJsonNewFileName);
-                fileInfo.MoveTo(ConfigHelper.FileNamesAndPaths.PrevJsonNewFileName);
+                File.Delete(prevOutPutJsonFileName);
+                fileInfo.MoveTo(prevOutPutJsonFileName);
                 //Console.WriteLine("File Renamed.");
             }
-            File.WriteAllText(ConfigHelper.FileNamesAndPaths.JsonFileName, text, System.Text.Encoding.UTF8);
+            File.WriteAllText(outputJsonFileName, text, System.Text.Encoding.UTF8);
+
+            return outputJsonFileName;
         }
 
         public static List<BasicTabInf> LoadJson(string jsonPath="")
@@ -144,7 +108,7 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             if (jsonPath == "")
             {
                 // "\"" was needed for passing as argument to JQ, not needed anymore.
-                jsonPath =  System.AppContext.BaseDirectory + ConfigHelper.FileNamesAndPaths.JsonFileName; //"\"" + System.AppContext.BaseDirectory + +ConfigHelper.FileNamesAndPaths.JsonFileName+ "\"";
+                jsonPath =  System.AppContext.BaseDirectory + ConfigHelper.FileNamesAndPaths.OutputJsonFileName; //"\"" + System.AppContext.BaseDirectory + +ConfigHelper.FileNamesAndPaths.JsonFileName+ "\"";
                 //usingDefaultPath = true;
             }
             
