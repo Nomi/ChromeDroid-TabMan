@@ -8,11 +8,11 @@ using System.Collections.Generic;
 using System.Text.Json;
 using ChromeDroid_TabMan.Auxiliary;
 using Newtonsoft.Json;
-using ChromeDroid_TabMan.Models;
 using System.Linq;
 using ChromeDroid_TabMan.Data;
 using AdvancedSharpAdbClient;
 using ChromeDroid_TabMan.Connection_and_Import;
+using ChromeDroid_TabMan.DTOs;
 
 
 //#define _USE_JQ

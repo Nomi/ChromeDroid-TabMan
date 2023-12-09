@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using ChromeDroid_TabMan.Auxiliary;
+using ChromeDroid_TabMan.DTOs;
 using ChromeDroid_TabMan.Models;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 //using JQ.Net;
@@ -69,10 +70,10 @@ namespace ChromeDroid_TabMan.Data
             {
                 BasicTabInf bti = basicTabInfs[i];
                 Tabs.Add(new TabInf(bti.url, bti.lastKnownTitle, i + 1));
-                if (!baseUrlsEncountered.Contains(Tabs[i].baseWebsite))
+                if (!baseUrlsEncountered.Contains(Tabs[i].BaseWebsite))
                 {
-                    baseUrlsEncountered.Add(Tabs[i].baseWebsite);
-                    BaseURLs.Add(Tabs[i].baseWebsite);
+                    baseUrlsEncountered.Add(Tabs[i].BaseWebsite);
+                    BaseURLs.Add(Tabs[i].BaseWebsite);
                 }
             }
             return;
@@ -113,10 +114,10 @@ namespace ChromeDroid_TabMan.Data
                         int count = 0;
                         foreach (var tab in Tabs)//NOTE TO SELF: TO DO : INEFFECCIENT AF, FIND DIFF METHOD
                         {
-                            if ((tab as TabInf).baseWebsite == (baseurl as string))
+                            if ((tab as TabInf).BaseWebsite == (baseurl as string))
                             {
                                 count++;
-                                sw.WriteLine("<li><a href={0}>{1}</a></li>", (tab as TabInf).url, (tab as TabInf).lastKnownTitle);
+                                sw.WriteLine("<li><a href={0}>{1}</a></li>", (tab as TabInf).URL, (tab as TabInf).LastKnownTitle);
                                 //w.WriteLine("<li><a href={0}>{1}</a></li>",(tab as TabInf).url, (tab as TabInf).lastKnownTitle);
                             }
                         }
@@ -171,10 +172,10 @@ namespace ChromeDroid_TabMan.Data
                         int count = 0;
                         foreach (var tab in Tabs)//NOTE TO SELF: TO DO : INEFFECCIENT AF, FIND DIFF METHOD
                         {
-                            if ((tab as TabInf).baseWebsite == (baseurl as string))
+                            if ((tab as TabInf).BaseWebsite == (baseurl as string))
                             {
                                 count++;
-                                sw.WriteLine("          <DT><A HREF={0} ADD_DATE={2}>{1}</A>", (tab as TabInf).url, (tab as TabInf).lastKnownTitle, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
+                                sw.WriteLine("          <DT><A HREF={0} ADD_DATE={2}>{1}</A>", (tab as TabInf).URL, (tab as TabInf).LastKnownTitle, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString());
                                 //w.WriteLine("<li><a href={0}>{1}</a></li>",(tab as TabInf).url, (tab as TabInf).lastKnownTitle);
                             }
                         }
@@ -211,16 +212,16 @@ namespace ChromeDroid_TabMan.Data
                         string lastKnownTitle = titleReader.ReadLine();
                         titlesRead++;
                         TabInf tab = new TabInf(line, "title-to-be-implemented", 1+TabCount);//++TabCount); //ADD TITLE HERE SOMEHOW!!
-                        tab.lastKnownTitle = lastKnownTitle;
+                        tab.LastKnownTitle = lastKnownTitle;
                         Tabs.Add(tab);
                         //Might be able to get rid of the following if condition if I make a viable comparison operator,etc for sorting/grouping
                         if (line.Contains("://")) //Note to self: TO DO? : replace with try catch then inform user some entries were not normal URLs?
                         {
                             urlsRead++;
-                            if (!this.BaseURLs.Contains(tab.baseWebsite))
+                            if (!this.BaseURLs.Contains(tab.BaseWebsite))
                             {
                                 baseURLsRead++;
-                                this.BaseURLs.Add(tab.baseWebsite);
+                                this.BaseURLs.Add(tab.BaseWebsite);
                                 if(printEnabled)
                                 {
                                     Console.ForegroundColor = ConsoleColor.Magenta;
@@ -231,11 +232,11 @@ namespace ChromeDroid_TabMan.Data
                             if(printEnabled)
                             {
                                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                                Console.Write("[BaseURL: "+tab.baseWebsite+"]");
+                                Console.Write("[BaseURL: "+tab.BaseWebsite+"]");
                                 Console.ForegroundColor = ConsoleColor.White;
                                 Console.Write(line);
                                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                                Console.WriteLine("[Last Known Title: {0}]", tab.lastKnownTitle);
+                                Console.WriteLine("[Last Known Title: {0}]", tab.LastKnownTitle);
                                 Console.ForegroundColor = ConsoleColor.White;
                             }
                         }

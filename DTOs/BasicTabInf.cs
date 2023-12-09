@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace ChromeDroid_TabMan.Models
+namespace ChromeDroid_TabMan.DTOs
 {
     public class BasicTabInf
     {
