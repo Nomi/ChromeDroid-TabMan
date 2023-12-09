@@ -10,6 +10,8 @@ namespace ChromeDroid_TabMan.Auxiliary
 {
     public static class ConfigHelper
     {
+        public static bool SortGroupsInGroupedHtmlAndNetscapeBookmarksAlphabetically = true;
+        public static string UnidentifiedBaseUrlString => "**Unidentiffied BaseURLs**";
         public static string ExportFilesPartialDefaultName { get { return "recoveredTabs(" + DateTime.Now.ToString("dd-mm-yy__HH-mm-ss")+")";} }
         public static void InitializeConfig()
         {
@@ -45,7 +47,8 @@ namespace ChromeDroid_TabMan.Auxiliary
         }
         public static class Database
         {
-            public static string DbFileName {   get { return "SQLite DB -" + ExportFilesPartialDefaultName + ".sqlite3.db";}  }
+            public static string DbFileExtensionWithDot => ".sqlite3.db";
+            public static string DbFileName => "SQLite DB -" + ExportFilesPartialDefaultName + DbFileExtensionWithDot;
             public static void InitializeConfig() 
             {
                 //DbPath = "_LastTabs.db";

@@ -18,9 +18,9 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 namespace ChromeDroid_TabMan.Data
 {
     //Singleton:
-    public class TabsList
+    public class DEPRECATED_TabsList
     {
-        private static TabsList instance = null;
+        private static DEPRECATED_TabsList instance = null;
         public enum PathType
         {
             URL_txt = 1,
@@ -29,6 +29,8 @@ namespace ChromeDroid_TabMan.Data
         public bool TabsProcessed { get; private set; }
         public int TabCount { get { return Tabs.Count; } }
         public List<TabInf> Tabs { get; private set; } //Contains TabInf for each Tab.
+
+        List<string> DEPRECATED_baseUrls;
 
 
         private readonly string urlSrcPath = ConfigHelper.FileNamesAndPaths.CurrentListOfURLsTxtFileName;
@@ -39,14 +41,14 @@ namespace ChromeDroid_TabMan.Data
 
         //public readonly ArrayList baseURLs = new ArrayList();
         public List<string> BaseURLs { get; private set; }
-        private TabsList()
+        private DEPRECATED_TabsList()
         {
             ResetTabList();
         }
-        public static TabsList GetInstance()
+        public static DEPRECATED_TabsList GetInstance()
         {
             if(instance == null)
-               instance = new TabsList();
+               instance = new DEPRECATED_TabsList();
             return instance;
         }
         public void ResetTabList()
@@ -55,6 +57,13 @@ namespace ChromeDroid_TabMan.Data
             BaseURLs = new();
             Tabs = new();
         }
+        internal void SetFromTabsContainer(ITabsContainer tabsContainer)
+        {
+            TabsProcessed = true;
+            BaseURLs = tabsContainer.BaseUrlToTabInfCollectionMap.Keys.ToList();
+            Tabs = tabsContainer.AllTabInfs.ToList();
+        }
+
         public void Process(List<BasicTabInf> basicTabInfs = null)
         {
             if(basicTabInfs==null)
@@ -87,7 +96,7 @@ namespace ChromeDroid_TabMan.Data
             TabsDbContext tabsDbContext = new(outputFile);
             System.IO.File.Delete(outputFile);
             tabsDbContext.Database.EnsureCreated();
-            tabsDbContext.Tabs.AddRange(TabsList.GetInstance().Tabs);
+            tabsDbContext.Tabs.AddRange(DEPRECATED_TabsList.GetInstance().Tabs);
             tabsDbContext.SaveChanges();
 
             return outputFile;
@@ -139,9 +148,20 @@ namespace ChromeDroid_TabMan.Data
         public string ExportToNetscapeBookmarksHTML(string outputfile = "", bool sort_baseURLs=false)
         {
             string title = "recoveredTabs (" + DateTime.Now.ToString() + ")";
+            string outputBaseDIR = string.Empty;
             if (outputfile.Length == 0 || !outputfile.Trim('"').EndsWith(".html"))
-                outputfile = ConfigHelper.FileNamesAndPaths.OutputPathDefaultExportDirectory + ConfigHelper.FileNamesAndPaths.BookmarksDefaultFileName;
-
+            {
+                outputfile = "Bookmarks - " + title + ".html";
+                outputfile = outputfile.Replace("/", "-");
+                outputfile = outputfile.Replace(":", "-");
+                outputBaseDIR = System.AppContext.BaseDirectory + @"Exports\";
+                //if(!Directory.Exists(outputBaseDIR)) //turns out, don't need this for Directory.CreateDirectory.
+                //{
+                //    Directory.CreateDirectory(outputBaseDIR);
+                //}
+                Directory.CreateDirectory(outputBaseDIR);
+                outputfile = outputBaseDIR + outputfile;
+            }
             using (FileStream fs = new FileStream(outputfile, FileMode.Create))
             {
                 using (StreamWriter w = new StreamWriter(fs, Encoding.UTF8))
@@ -159,14 +179,14 @@ namespace ChromeDroid_TabMan.Data
                     w.WriteLine(title + "</H3>");
                     w.WriteLine("   <DL><p>");
                     //NEED TO MAKE MORE EFFICIENT!! (Technically, not needed but should do so!)
-                    if(sort_baseURLs)
+                    if (sort_baseURLs)
                     {
                         BaseURLs.Sort();
                     }
                     foreach (var baseurl in BaseURLs)
                     {
                         w.Write("       <DT><H3 ADD_DATE=\"" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + "\"LAST_MODIFIED=\"" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString() + "\">");
-                        w.WriteLine((baseurl as string).Replace(".","_") + "</H3>");
+                        w.WriteLine((baseurl as string).Replace(".", "_") + "</H3>");
 
                         var sw = new StringWriter();
                         int count = 0;

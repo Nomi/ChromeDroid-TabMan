@@ -20,15 +20,16 @@ namespace ChromeDroid_TabMan
     {
         string jsonLocation = string.Empty;
         DataTable dt = new DataTable();
+        ITabsContainer tabsContainer =null;
         public MainForm()
         {
-            dt.Columns.Add("Tab Position",typeof(int));
+            dt.Columns.Add("TabNum",typeof(int));
             dt.Columns.Add("Title");
             dt.Columns.Add("URL");
             dt.Columns.Add("Base URL");
             InitializeComponent();
 
-            var tabsList = TabsList.GetInstance();
+            //var tabsList = TabsList.GetInstance();
             //FillMyTreeView(tabsList);
             //tabsList.ExportToHTML();
             //tabsList.ExportToNetscapeBookmarksHTML();
@@ -49,11 +50,11 @@ namespace ChromeDroid_TabMan
         //    //                End If
         //    //End If
         //}
-        private void FillMyTreeView(ITabsContainer tabsContainer)
+        private void FillMyTreeView()
         {
             tabListTree.BeginUpdate();
             tabListTree.Nodes.Add(new TreeNode("**Unidentified BaseURLs**"));
-            int baseUrlIdx = 0;
+            int baseUrlIdx = 1; // Index 0 is for "**Unidentified BaseURLs**"
             foreach (var baseUrl in tabsContainer.BaseUrlToTabInfCollectionMap.Keys)
             {
                 var currMap = tabsContainer.BaseUrlToTabInfCollectionMap;
@@ -66,7 +67,7 @@ namespace ChromeDroid_TabMan
             tabListTree.Update();
         }
 
-        private void FillDataGridView1(ITabsContainer tabsContainer)
+        private void FillDataGridView1()
         {
             foreach (TabInf tab in tabsContainer.AllTabInfs)
             {
@@ -130,10 +131,10 @@ namespace ChromeDroid_TabMan
             tabListTree.Nodes.Clear();
 
             ITabsImporter tabsImporter = new JsonToTabsImporter(jsonLocation);
-            var tabContainer = tabsImporter.Import();
+            tabsContainer = tabsImporter.Import();
 
-            FillDataGridView1(tabContainer);
-            FillMyTreeView(tabContainer);
+            FillDataGridView1();
+            FillMyTreeView();
 
 
             importAndProcessGroupbox.ForeColor = Color.Lime;
@@ -148,8 +149,9 @@ namespace ChromeDroid_TabMan
         private void button_exportListHTML_Click(object sender, EventArgs e)
         {
             //add select path dialog box??
-            var tabsList = TabsList.GetInstance();
-            string outputPath =  tabsList.ExportToGroupedListHTML();
+            ITabsExporter tabsExporter = new GroupedBasicHtmlListTabsExporter();
+            var outputPath = tabsExporter.Export(tabsContainer);
+
             if(groupBox1.ForeColor!=Color.Lime)
             {
                 groupBox1.ForeColor = Color.Yellow;
@@ -160,8 +162,9 @@ namespace ChromeDroid_TabMan
         private void button_ExportAsBookmarks_Click(object sender, EventArgs e)
         {
             //add select path dialog box??
-            var tabsList = TabsList.GetInstance();
-            string outputPath= tabsList.ExportToNetscapeBookmarksHTML();
+            ITabsExporter tabsExporter = new GroupedNetscapeHtmlBookmarksExporter();
+            var outputPath = tabsExporter.Export(tabsContainer);
+
             groupBox1.ForeColor = Color.Lime;
             MessageBox.Show("The Bookmarks file has been exported to: " + outputPath, "Bookmarks Exported!", MessageBoxButtons.OK);
         }
@@ -183,8 +186,8 @@ namespace ChromeDroid_TabMan
         private void button_ExportAsSQLiteDB_Click(object sender, EventArgs e)
         {
             //add select path dialog box??
-            var tabsList = TabsList.GetInstance();
-            string outputPath = tabsList.ExportToSqliteDB();
+            ITabsExporter tabsExporter = new SQLiteTabsExporter();
+            var outputPath = tabsExporter.Export(tabsContainer);
             groupBox1.ForeColor = Color.Lime;
             MessageBox.Show("The SQLite3 Database has been exported to: " + outputPath, "Bookmarks Exported!", MessageBoxButtons.OK);
         }

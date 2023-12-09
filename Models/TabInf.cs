@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using ChromeDroid_TabMan.Auxiliary;
 
 namespace ChromeDroid_TabMan.Models
 {
@@ -37,12 +38,14 @@ namespace ChromeDroid_TabMan.Models
         {
             this.URL = url;
             this.LastKnownTitle = lkTitle;
+            if (LastKnownTitle.Length == 0)
+                LastKnownTitle = url;
             TabNum = tabNum;
             BaseWebsite = GetBaseWebsite();
         }
         private string GetBaseWebsite()
         {
-            string baseURL = string.Empty;
+            string baseURL = ConfigHelper.UnidentifiedBaseUrlString;
             //The following approach should be faster than regex I think.
             if (URL.Contains("://"))
             {
@@ -60,6 +63,8 @@ namespace ChromeDroid_TabMan.Models
                     }
                 }
                 baseURL = URL.Substring(indexAfterColonDoubleSlash, ssLen);
+                if (!baseURL.Contains("."))
+                    baseURL = ConfigHelper.UnidentifiedBaseUrlString;
             }
             return baseURL;
         }
