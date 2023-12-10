@@ -18,7 +18,7 @@ namespace ChromeDroid_TabMan.Data
 
         public GroupedBasicHtmlListTabsExporter(string outputFile = "")
         {
-            if (outputFile.Length == 0 || !outputFile.Trim('"').EndsWith(".html"))
+            if (outputFile.Length == 0 || !outputFile.Trim('"').ToLower().EndsWith(".html"))
                 outputFile = ConfigHelper.FileNamesAndPaths.OutputPathDefaultExportDirectory + ConfigHelper.FileNamesAndPaths.ListDefaultFileName;
             OutputFile = outputFile;
         }

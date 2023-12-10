@@ -146,7 +146,7 @@ namespace ChromeDroid_TabMan
 
         }
 
-        private void button_exportListHTML_Click(object sender, EventArgs e)
+        private void button_exportListHTMLGrouped_Click(object sender, EventArgs e)
         {
             //add select path dialog box??
             ITabsExporter tabsExporter = new GroupedBasicHtmlListTabsExporter();
@@ -157,16 +157,18 @@ namespace ChromeDroid_TabMan
                 groupBox1.ForeColor = Color.Yellow;
             }
             MessageBox.Show("The HTML List has been exported to: " + outputPath, "List Exported!", MessageBoxButtons.OK);
+            button_exportListHTMLGrouped.ForeColor = Color.Lime;
         }
 
-        private void button_ExportAsBookmarks_Click(object sender, EventArgs e)
+        private void button_ExportAsBookmarksGrouped_Click(object sender, EventArgs e)
         {
             //add select path dialog box??
             ITabsExporter tabsExporter = new GroupedNetscapeHtmlBookmarksExporter();
             var outputPath = tabsExporter.Export(tabsContainer);
 
             groupBox1.ForeColor = Color.Lime;
-            MessageBox.Show("The Bookmarks file has been exported to: " + outputPath, "Bookmarks Exported!", MessageBoxButtons.OK);
+            MessageBox.Show("The Bookmarks (grouped by base URL) file has been exported to: " + outputPath, "Bookmarks (grouped) Exported!", MessageBoxButtons.OK);
+            button_ExportAsBookmarksGrouped.ForeColor = Color.Lime;
         }
 
         private void button_selectjson_Click(object sender, EventArgs e)
@@ -189,7 +191,28 @@ namespace ChromeDroid_TabMan
             ITabsExporter tabsExporter = new SQLiteTabsExporter();
             var outputPath = tabsExporter.Export(tabsContainer);
             groupBox1.ForeColor = Color.Lime;
-            MessageBox.Show("The SQLite3 Database has been exported to: " + outputPath, "Bookmarks Exported!", MessageBoxButtons.OK);
+            MessageBox.Show("The SQLite3 Database has been exported to: " + outputPath, "SQLite Database Exported!", MessageBoxButtons.OK);
+            button_ExportAsSQLiteDB.ForeColor = Color.Lime;
+        }
+
+        private void button_exportCSV_Click(object sender, EventArgs e)
+        {
+            //add select path dialog box??
+            ITabsExporter tabsExporter = new CSVTextFilePairTabsExporter();
+            var outputPath = tabsExporter.Export(tabsContainer);
+            groupBox1.ForeColor = Color.Lime;
+            MessageBox.Show("The CSV text file has been exported to: " + outputPath, "CSV Exported!", MessageBoxButtons.OK);
+            button_exportCSV.ForeColor = Color.Lime;
+        }
+
+        private void button_ExportAsBookmarks_Click(object sender, EventArgs e)
+        {
+            //add select path dialog box??
+            ITabsExporter tabsExporter = new NetscapeHtmlBookmarksExporter();
+            var outputPath = tabsExporter.Export(tabsContainer);
+            groupBox1.ForeColor = Color.Lime;
+            MessageBox.Show("The Bookmarks file has been exported to: " + outputPath, "Bookmarks Exported!", MessageBoxButtons.OK);
+            button_ExportAsBookmarks.ForeColor = Color.Lime;
         }
     }
 
