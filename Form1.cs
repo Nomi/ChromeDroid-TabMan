@@ -27,7 +27,23 @@ namespace ChromeDroid_TabMan
             dt.Columns.Add("Title");
             dt.Columns.Add("URL");
             dt.Columns.Add("Base URL");
+
+
+
             InitializeComponent();
+
+            comboBox_BrowserSelect.DataSource = new BrowserComboItem[]
+            {
+                new BrowserComboItem("Chrome",ConfigHelper.ADB.Chrome_PackageName,ConfigHelper.ADB.Chrome_ForwardParameter_Remote,true),
+                new BrowserComboItem("Opera",ConfigHelper.ADB.Opera_PackageName,ConfigHelper.ADB.Opera_ForwardParameter_Remote,true),
+                new BrowserComboItem("SamsungInternet",ConfigHelper.ADB.SamsungInternet_PackageName,ConfigHelper.ADB.SamsungInternet_ForwardParameter_Remote,true),
+                new BrowserComboItem("Edge",ConfigHelper.ADB.Edge_PackageName,ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd,false),
+                new BrowserComboItem("Brave",ConfigHelper.ADB.Brave_PackageName,ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd,false)
+            };
+            comboBox_BrowserSelect.DisplayMember = nameof(BrowserComboItem.BrowserName);
+            comboBox_BrowserSelect.ValueMember = nameof(BrowserComboItem.BrowserDetails);
+            comboBox_BrowserSelect.SelectedIndex= 0;
+
 
             //var tabsList = TabsList.GetInstance();
             //FillMyTreeView(tabsList);
@@ -53,8 +69,7 @@ namespace ChromeDroid_TabMan
         private void FillMyTreeView()
         {
             tabListTree.BeginUpdate();
-            tabListTree.Nodes.Add(new TreeNode("**Unidentified BaseURLs**"));
-            int baseUrlIdx = 1; // Index 0 is for "**Unidentified BaseURLs**"
+            int baseUrlIdx = 0;
             foreach (var baseUrl in tabsContainer.BaseUrlToTabInfCollectionMap.Keys)
             {
                 var currMap = tabsContainer.BaseUrlToTabInfCollectionMap;
@@ -98,23 +113,31 @@ namespace ChromeDroid_TabMan
 
         private void button_connectfetchjson_Click(object sender, EventArgs e)
         {
-            string clickMessage = "Make sure to:\n 1) Have ADB and proper ADB drivers for your device.\n";
-            clickMessage += "2) Have \"USB Debugging\" enabled on the device to recover from.\n";
-            clickMessage += "3) Connect ONLY the Android device you want to recover from.\n";
-            clickMessage += "4) Allow ADB Debugging from the pop-up on your device.\n";
-            clickMessage += "5) Have Chrome open on your Android device.";
-            MessageBox.Show(clickMessage, "REQUIREMENTS/INSTRUCTIONS", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            groupBox1.ForeColor = Color.White;
-            importAndProcessGroupbox.ForeColor = Color.White;
-            connectGroupBox.ForeColor = Color.Orange;
+            //string clickMessage = "Make sure to:\n 1) Have ADB and proper ADB drivers for your device.\n";
+            //clickMessage += "2) Have \"USB Debugging\" enabled on the device to recover from.\n";
+            //clickMessage += "3) Connect ONLY the Android device you want to recover from.\n";
+            //clickMessage += "4) Allow ADB Debugging from the pop-up on your device.\n";
+            //clickMessage += "5) Have Chrome open on your Android device.";
+            //MessageBox.Show(clickMessage, "REQUIREMENTS/INSTRUCTIONS", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //groupBox1.ForeColor = Color.White;
+            //importAndProcessGroupbox.ForeColor = Color.White;
+            //connectGroupBox.ForeColor = Color.Orange;
 
             //need to add adb location selection window and an argument to take that in the StartChr... function.
             //ImportUtilities.StartChromeAndroidJsonListServer(string.Empty); //for testing/debugging
-            string adbPath = string.Empty;
-            adbPath = ImportUtilities.GetADBPathDialog();
-            if (adbPath == "-1") return;
+            //string adbPath = string.Empty;
+            //adbPath = ImportUtilities.GetADBPathDialog();
+            //if (adbPath == "-1") return;
+
+            string adbPath = "C:\\Program Files (x86)\\Minimal ADB and Fastboot\\adb.exe";
             //IAdbConnector adbConnector = new StaticSocketNameChromiumAdbConnector(adbPath, ConfigHelper.ADB.Chrome_PackageName, ConfigHelper.ADB.Chrome_ForwardParameter_Remote);
-            IAdbConnector adbConnector = new DynamicSocketNamePidAtEndChromiumAdbConnector(adbPath, ConfigHelper.ADB.Edge_PackageName, ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd);
+            IAdbConnector adbConnector; //= new DynamicSocketNamePidAtEndChromiumAdbConnector(adbPath, ConfigHelper.ADB.Edge_PackageName, ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd);
+            BrowserDetailsStruct browserDetails = (BrowserDetailsStruct)comboBox_BrowserSelect.SelectedValue;
+            if (browserDetails.IsSocketNameFull)
+                adbConnector = new StaticSocketNameChromiumAdbConnector(adbPath, browserDetails.PackageName, browserDetails.SocketNameFullOrPartial);
+            else
+                adbConnector = new DynamicSocketNamePidAtEndChromiumAdbConnector(adbPath, browserDetails.PackageName, browserDetails.SocketNameFullOrPartial);
+
             ITabsJsonFetcher tabsJsonFetcher = new AdbTabsJsonFetcher(adbConnector);
             jsonLocation = tabsJsonFetcher.FetchTabsJson();
 
@@ -213,6 +236,11 @@ namespace ChromeDroid_TabMan
             groupBox1.ForeColor = Color.Lime;
             MessageBox.Show("The Bookmarks file has been exported to: " + outputPath, "Bookmarks Exported!", MessageBoxButtons.OK);
             button_ExportAsBookmarks.ForeColor = Color.Lime;
+        }
+
+        private void browserDetailsBindingSource_CurrentChanged(object sender, EventArgs e)
+        {
+
         }
     }
 

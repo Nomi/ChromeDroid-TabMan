@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabListTree = new System.Windows.Forms.TreeView();
@@ -51,6 +52,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.button_connectfetchjson = new System.Windows.Forms.Button();
             this.button_selectjson = new System.Windows.Forms.Button();
+            this.comboBox_BrowserSelect = new System.Windows.Forms.ComboBox();
+            this.browserDetailsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPosList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -61,6 +64,7 @@
             this.importAndProcessGroupbox.SuspendLayout();
             this.connectGroupBox.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.browserDetailsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabListTree
@@ -332,44 +336,44 @@
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.label1, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.button_connectfetchjson, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.button_selectjson, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.label1, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.button_connectfetchjson, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.button_selectjson, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.comboBox_BrowserSelect, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 23);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tableLayoutPanel2.RowCount = 4;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(404, 137);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // label1
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.ForeColor = System.Drawing.Color.AliceBlue;
-            this.label1.Location = new System.Drawing.Point(3, 54);
+            this.label1.Location = new System.Drawing.Point(3, 74);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(398, 27);
+            this.label1.Size = new System.Drawing.Size(398, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "--- OR ---";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button_connectfetchjson
             // 
-            this.button_connectfetchjson.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_connectfetchjson.AutoSize = true;
+            this.button_connectfetchjson.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_connectfetchjson.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_connectfetchjson.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button_connectfetchjson.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.button_connectfetchjson.Location = new System.Drawing.Point(3, 3);
+            this.button_connectfetchjson.Location = new System.Drawing.Point(3, 30);
             this.button_connectfetchjson.Name = "button_connectfetchjson";
-            this.button_connectfetchjson.Size = new System.Drawing.Size(398, 48);
+            this.button_connectfetchjson.Size = new System.Drawing.Size(398, 41);
             this.button_connectfetchjson.TabIndex = 1;
             this.button_connectfetchjson.Text = "Connect and Fetch JSON";
             this.button_connectfetchjson.UseVisualStyleBackColor = true;
@@ -377,18 +381,30 @@
             // 
             // button_selectjson
             // 
-            this.button_selectjson.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_selectjson.AutoSize = true;
+            this.button_selectjson.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_selectjson.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_selectjson.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.button_selectjson.Location = new System.Drawing.Point(3, 84);
+            this.button_selectjson.Location = new System.Drawing.Point(3, 90);
             this.button_selectjson.Name = "button_selectjson";
-            this.button_selectjson.Size = new System.Drawing.Size(398, 50);
+            this.button_selectjson.Size = new System.Drawing.Size(398, 44);
             this.button_selectjson.TabIndex = 2;
             this.button_selectjson.Text = "Select pre-fetched JSON";
             this.button_selectjson.UseVisualStyleBackColor = true;
             this.button_selectjson.Click += new System.EventHandler(this.button_selectjson_Click);
+            // 
+            // comboBox_BrowserSelect
+            // 
+            this.comboBox_BrowserSelect.FormattingEnabled = true;
+            this.comboBox_BrowserSelect.Location = new System.Drawing.Point(3, 3);
+            this.comboBox_BrowserSelect.Name = "comboBox_BrowserSelect";
+            this.comboBox_BrowserSelect.Size = new System.Drawing.Size(151, 28);
+            this.comboBox_BrowserSelect.TabIndex = 3;
+            // 
+            // browserDetailsBindingSource
+            // 
+            this.browserDetailsBindingSource.DataSource = typeof(ChromeDroid_TabMan.DTOs.BrowserDetailsStruct);
+            this.browserDetailsBindingSource.CurrentChanged += new System.EventHandler(this.browserDetailsBindingSource_CurrentChanged);
             // 
             // MainForm
             // 
@@ -412,6 +428,7 @@
             this.connectGroupBox.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.browserDetailsBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -427,10 +444,6 @@
         private System.Windows.Forms.GroupBox connectGroupBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox importAndProcessGroupbox;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button_connectfetchjson;
-        private System.Windows.Forms.Button button_selectjson;
         private System.Windows.Forms.Button button_ImportAndProcess;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.LinkLabel linkLabel1;
@@ -439,6 +452,12 @@
         private System.Windows.Forms.Button button_exportCSV;
         private System.Windows.Forms.Button button_ExportAsBookmarksGrouped;
         private System.Windows.Forms.Button button_exportListHTMLGrouped;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button button_connectfetchjson;
+        private System.Windows.Forms.Button button_selectjson;
+        private System.Windows.Forms.ComboBox comboBox_BrowserSelect;
+        private System.Windows.Forms.BindingSource browserDetailsBindingSource;
     }
 }
 
