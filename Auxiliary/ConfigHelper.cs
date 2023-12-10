@@ -22,8 +22,10 @@ namespace ChromeDroid_TabMan.Auxiliary
         public static class FileNamesAndPaths
         {
             public static string OutputPathDefaultExportDirectory => System.AppContext.BaseDirectory + @"Exports\";
-            public static string BookmarksDefaultFileName => "Bookmarks -" + ExportFilesPartialDefaultName + ".html";
-            public static string ListDefaultFileName => "LIST -" + ExportFilesPartialDefaultName + ".html";
+            public static string BookmarksGroupedDefaultFileName => "Bookmarks_Grouped - " + ExportFilesPartialDefaultName + ".html";
+            public static string BookmarksDefaultFileName => "Bookmarks - " + ExportFilesPartialDefaultName + ".html";
+            public static string ListDefaultFileName => "LIST - " + ExportFilesPartialDefaultName + ".html";
+            public static string CSVDefaultFileName => "CSV - " + ExportFilesPartialDefaultName + ".csv";
             public static void InitializeConfig()
             {
                 OutputJsonFileName = "_chromtabJSON.json";
@@ -48,7 +50,7 @@ namespace ChromeDroid_TabMan.Auxiliary
         public static class Database
         {
             public static string DbFileExtensionWithDot => ".sqlite3.db";
-            public static string DbFileName => "SQLite DB -" + ExportFilesPartialDefaultName + DbFileExtensionWithDot;
+            public static string DbFileName => "SQLite DB - " + ExportFilesPartialDefaultName + DbFileExtensionWithDot;
             public static void InitializeConfig() 
             {
                 //DbPath = "_LastTabs.db";

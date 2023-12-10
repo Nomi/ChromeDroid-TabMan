@@ -18,8 +18,8 @@ namespace ChromeDroid_TabMan.Data
 
         public GroupedNetscapeHtmlBookmarksExporter(string outputFile="")
         {
-            if (outputFile.Length == 0 || !outputFile.Trim('"').EndsWith(".html"))
-                outputFile = ConfigHelper.FileNamesAndPaths.OutputPathDefaultExportDirectory + ConfigHelper.FileNamesAndPaths.BookmarksDefaultFileName;
+            if (outputFile.Length == 0 || !outputFile.Trim('"').ToLower().EndsWith(".html"))
+                outputFile = ConfigHelper.FileNamesAndPaths.OutputPathDefaultExportDirectory + ConfigHelper.FileNamesAndPaths.BookmarksGroupedDefaultFileName;
             OutputFile= outputFile;
         }
         public string Export(ITabsContainer tabsContainer)
@@ -135,6 +135,7 @@ namespace ChromeDroid_TabMan.Data
             return OutputFile;
         }
 
+        /* /// DOES NOT SUPPORT NESTED FOLDERS (apparently)
         private string ExportUsingBookmarksManagerNugetPackage(TabsContainer tabsContainer, string title) //does not support nested folders apparently.
         {
             var bookmarks = new BookmarksManager.BookmarkFolder(title);
@@ -168,5 +169,6 @@ namespace ChromeDroid_TabMan.Data
 
             return OutputFile;
         }
+        */
     }
 }
