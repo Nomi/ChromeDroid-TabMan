@@ -6,6 +6,7 @@
     <RootNamespace>ChromeDroid_TabMan</RootNamespace>
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>AnyCPU;x64</Platforms>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +14,14 @@
     <PackageReference Include="BookmarksManager" Version="2.0.0" />
     <PackageReference Include="JQ.NET" Version="1.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
-    <PackageReference Include="PrettyBin" Version="1.1.0" />
   </ItemGroup>
+
+	<ItemGroup>
+	  <EditorConfigFiles Remove="C:\Users\Noman\source\repos\ChromeDroid TabMan\.editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="C:\Users\Noman\source\repos\ChromeDroid TabMan\.editorconfig" />
+	</ItemGroup>
 
 </Project>
