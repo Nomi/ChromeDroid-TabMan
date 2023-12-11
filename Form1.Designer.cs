@@ -422,7 +422,6 @@
             // 
             // browserDetailsBindingSource
             // 
-            this.browserDetailsBindingSource.DataSource = typeof(ChromeDroid_TabMan.DTOs.BrowserDetailsStruct);
             this.browserDetailsBindingSource.CurrentChanged += new System.EventHandler(this.browserDetailsBindingSource_CurrentChanged);
             // 
             // MainForm
