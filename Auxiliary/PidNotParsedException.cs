@@ -8,7 +8,7 @@ namespace ChromeDroid_TabMan.Auxiliary
 {
     public class PidNotParsedException :Exception
     {
-        public PidNotParsedException(string message="PID could not be found. One possibility is that the process may not be running.") : base(message)
+        public PidNotParsedException(string message="PID could not be found or parsed. One possibility is that the process may not be running.") : base(message)
         {
 
         }

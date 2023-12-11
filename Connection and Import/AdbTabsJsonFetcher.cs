@@ -20,7 +20,7 @@ namespace ChromeDroid_TabMan.Connection_and_Import
         public string FetchTabsJson()
         {
             string jsonListTabsUrl = _adbConnector.StartAdbJsonListServer();
-            return ImportUtilities.DownloadTabListJSON(tabsJsonUrl: jsonListTabsUrl, outputJsonFileName: ConfigHelper.FileNamesAndPaths.OutputJsonFileName);
+            return ImportUtils.DownloadTabListJSON(tabsJsonUrl: jsonListTabsUrl, outputJsonFileName: ConfigHelper.FileNamesAndPaths.OutputJsonFileName);
         }
     }
 }

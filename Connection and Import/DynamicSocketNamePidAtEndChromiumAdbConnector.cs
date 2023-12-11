@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ChromeDroid_TabMan.Auxiliary.ImportUtilities;
+using static ChromeDroid_TabMan.Auxiliary.ImportUtils;
 
 namespace ChromeDroid_TabMan.Connection_and_Import
 {
@@ -19,13 +19,13 @@ namespace ChromeDroid_TabMan.Connection_and_Import
         {
             AdbPath = adbPath;
             BrowserPackageName = browserPackageName;
-            string chromiumDevToolsSocketName = baseForwardParameterRemote_MissingPidAtEnd + "_" + ImportUtilities.GetChromiumBrowserPid(AdbPath,BrowserPackageName);
+            string chromiumDevToolsSocketName = baseForwardParameterRemote_MissingPidAtEnd + "_" + ImportUtils.GetChromiumBrowserPid(AdbPath,BrowserPackageName);
             ForwardParameter_Remote = chromiumDevToolsSocketName;
         }
 
         public string StartAdbJsonListServer()
         {
-            return ImportUtilities.StartChromeAndroidJsonListServer(AdbPath, BrowserPackageName, ForwardParameter_Remote);
+            return ImportUtils.StartChromeAndroidJsonListServer(AdbPath, BrowserPackageName, ForwardParameter_Remote);
         }
         
     }

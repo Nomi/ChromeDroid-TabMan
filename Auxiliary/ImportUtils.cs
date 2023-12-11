@@ -21,22 +21,13 @@ using AdvancedSharpAdbClient.DeviceCommands;
 
 namespace ChromeDroid_TabMan.Auxiliary
 {
-
-    public static class ImportUtilities
+    public struct ClientAndDevice_Adb
     {
-        private enum NextStepImpUtil
-        {
-            StartADB,
-            ConnectToDevice
-        };
-        private static Process proc = null;
-        private static NextStepImpUtil nextStep = NextStepImpUtil.StartADB;
-
-        public struct ClientAndDevice_Adb
-        {
-            public AdbClient client;
-            public DeviceData device;
-        }
+        public AdbClient client;
+        public DeviceData device;
+    }
+    public static class ImportUtils
+    {
         public static ClientAndDevice_Adb ConnectAndGetAdbClientAndDevice(string adbPath)
         {
             if (!AdbServer.Instance.GetStatus().IsRunning)
@@ -63,7 +54,7 @@ namespace ChromeDroid_TabMan.Auxiliary
         }
         public static string GetChromiumBrowserPid(string adbPath, string browserPackageName, bool startBrowserAutomatically = true)
         {
-            ClientAndDevice_Adb clientAndDevice_Adb = ImportUtilities.ConnectAndGetAdbClientAndDevice(adbPath);
+            ClientAndDevice_Adb clientAndDevice_Adb = ImportUtils.ConnectAndGetAdbClientAndDevice(adbPath);
             AdbClient client = clientAndDevice_Adb.client;
             DeviceData device = clientAndDevice_Adb.device;
 
@@ -84,7 +75,6 @@ namespace ChromeDroid_TabMan.Auxiliary
             {
                 throw new PidNotParsedException();
             }
-
 
             return pid.ToString();
         }
@@ -113,13 +103,6 @@ namespace ChromeDroid_TabMan.Auxiliary
             var request = new HttpRequestMessage(HttpMethod.Get, tabsJsonUrl);
             string text;
             var response = httpClient.SendAsync(request).Result;
-
-            //HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(tabsJsonUrl);
-            //httpWebRequest.Method = WebRequestMethods.Http.Get;
-            //httpWebRequest.Accept = "application/json";
-            //httpWebRequest.ContentType = "application/json; charset=utf-8";
-            //string text;
-            //var response = (HttpWebResponse)httpWebRequest.GetResponse();
 
             using (var sr = new StreamReader(response.Content.ReadAsStream()))//response.GetResponseStream()))
             {
@@ -164,74 +147,6 @@ namespace ChromeDroid_TabMan.Auxiliary
         {
             File.WriteAllLines(ConfigHelper.FileNamesAndPaths.CurrentListOfURLsTxtFileName, basicTabInfs.Select(x => x.url));//select preserves order.
             File.WriteAllLines(ConfigHelper.FileNamesAndPaths.CurrentListOfTitlesTxtFileName, basicTabInfs.Select(x => x.lastKnownTitle));//select preserves order.
-        }
-
-        public static List<string> GetDevToolsSockets(string adbPath)
-        {
-            ClientAndDevice_Adb clientAndDevice_Adb = ImportUtilities.ConnectAndGetAdbClientAndDevice(adbPath);
-            AdbClient client = clientAndDevice_Adb.client;
-            DeviceData device = clientAndDevice_Adb.device;
-
-            ConsoleOutputReceiver cOR = new();
-            client.ExecuteShellCommand(device, @"ss -a 2>/dev/null| grep devtools| cut -F 5", cOR);
-            string response = cOR.ToString();
-
-            return response.Split("\n").ToList();
-
-        }
-        public static string GetADBPathDialog()
-        {
-            //var fileContent = string.Empty;
-            var filePath = string.Empty;
-            bool IsCancelled = false;
-            while (filePath == string.Empty && !IsCancelled)
-            {
-                using (OpenFileDialog openFileDialog = new OpenFileDialog())
-                {
-                    openFileDialog.InitialDirectory = "c:\\";
-                    openFileDialog.Filter = "ADB Executable (adb.exe)|adb.exe|All Executables (*.exe)|*.exe";
-                    openFileDialog.FilterIndex = 1;
-                    openFileDialog.RestoreDirectory = true;
-
-
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        //Get the path of specified file
-
-                        filePath = openFileDialog.FileName;
-                        if (filePath == string.Empty)
-                        {
-                            if (DialogResult.Cancel == MessageBox.Show("No file selected.", "Notice", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation))
-                            {
-                                IsCancelled = true;
-                                return "-1";
-                            }
-                        }
-
-
-                        ////Read the contents of the file into a stream
-                        //var fileStream = openFileDialog.OpenFile();
-
-                        //using (StreamReader reader = new StreamReader(fileStream))
-                        //{
-                        //    fileContent = reader.ReadToEnd();
-                        //}
-                    }
-                    else
-                    {
-                        if (DialogResult.Cancel == MessageBox.Show("No file selected.", "Notice", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation))
-                        {
-                            IsCancelled = true;
-                            return "-1";
-                        }
-                    }
-                }
-            }
-
-            //MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
-            MessageBox.Show("Selected executable: " + filePath, "ADB Executable Selected!" + filePath, MessageBoxButtons.OK);
-
-            return filePath;
         }
     }
 }

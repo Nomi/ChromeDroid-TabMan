@@ -342,13 +342,13 @@
             this.button_ManuallyDiscoverDevToolsSockets.BackColor = System.Drawing.SystemColors.Info;
             this.button_ManuallyDiscoverDevToolsSockets.Font = new System.Drawing.Font("Segoe UI Light", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button_ManuallyDiscoverDevToolsSockets.ForeColor = System.Drawing.Color.Black;
-            this.button_ManuallyDiscoverDevToolsSockets.Location = new System.Drawing.Point(171, -4);
+            this.button_ManuallyDiscoverDevToolsSockets.Location = new System.Drawing.Point(202, -4);
             this.button_ManuallyDiscoverDevToolsSockets.Name = "button_ManuallyDiscoverDevToolsSockets";
-            this.button_ManuallyDiscoverDevToolsSockets.Size = new System.Drawing.Size(233, 29);
+            this.button_ManuallyDiscoverDevToolsSockets.Size = new System.Drawing.Size(202, 24);
             this.button_ManuallyDiscoverDevToolsSockets.TabIndex = 4;
-            this.button_ManuallyDiscoverDevToolsSockets.Text = "Manually Discover DevTools Sockets";
+            this.button_ManuallyDiscoverDevToolsSockets.Text = "Fix or Discover DevTools Sockets";
             this.button_ManuallyDiscoverDevToolsSockets.UseVisualStyleBackColor = false;
-            this.button_ManuallyDiscoverDevToolsSockets.Click += new System.EventHandler(this.button_ManuallyDiscoverDevToolsSockets_Click);
+            this.button_ManuallyDiscoverDevToolsSockets.Click += new System.EventHandler(this.button_FixOrDiscoverDevToolsSockets_Click);
             // 
             // tableLayoutPanel2
             // 
