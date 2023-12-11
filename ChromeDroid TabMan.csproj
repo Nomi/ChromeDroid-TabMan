@@ -16,12 +16,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
   </ItemGroup>
 
-	<ItemGroup>
-	  <EditorConfigFiles Remove="C:\Users\Noman\source\repos\ChromeDroid TabMan\.editorconfig" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="C:\Users\Noman\source\repos\ChromeDroid TabMan\.editorconfig" />
-	</ItemGroup>
-
 </Project>
