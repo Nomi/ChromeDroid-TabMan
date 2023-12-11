@@ -48,6 +48,7 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.button_ImportAndProcess = new System.Windows.Forms.Button();
             this.connectGroupBox = new System.Windows.Forms.GroupBox();
+            this.button_ManuallyDiscoverDevToolsSockets = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.button_connectfetchjson = new System.Windows.Forms.Button();
@@ -320,6 +321,7 @@
             // 
             // connectGroupBox
             // 
+            this.connectGroupBox.Controls.Add(this.button_ManuallyDiscoverDevToolsSockets);
             this.connectGroupBox.Controls.Add(this.tableLayoutPanel2);
             this.connectGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.connectGroupBox.Font = new System.Drawing.Font("Segoe UI", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
@@ -331,6 +333,22 @@
             this.connectGroupBox.TabStop = false;
             this.connectGroupBox.Text = "Device Connection";
             this.connectGroupBox.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // button_ManuallyDiscoverDevToolsSockets
+            // 
+            this.button_ManuallyDiscoverDevToolsSockets.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_ManuallyDiscoverDevToolsSockets.BackColor = System.Drawing.SystemColors.Info;
+            this.button_ManuallyDiscoverDevToolsSockets.Font = new System.Drawing.Font("Segoe UI Light", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button_ManuallyDiscoverDevToolsSockets.ForeColor = System.Drawing.Color.Black;
+            this.button_ManuallyDiscoverDevToolsSockets.Location = new System.Drawing.Point(171, -4);
+            this.button_ManuallyDiscoverDevToolsSockets.Name = "button_ManuallyDiscoverDevToolsSockets";
+            this.button_ManuallyDiscoverDevToolsSockets.Size = new System.Drawing.Size(233, 29);
+            this.button_ManuallyDiscoverDevToolsSockets.TabIndex = 4;
+            this.button_ManuallyDiscoverDevToolsSockets.Text = "Manually Discover DevTool Sockets";
+            this.button_ManuallyDiscoverDevToolsSockets.UseVisualStyleBackColor = false;
+            this.button_ManuallyDiscoverDevToolsSockets.Click += new System.EventHandler(this.button_ManuallyDiscoverDevToolsSockets_Click);
             // 
             // tableLayoutPanel2
             // 
@@ -395,10 +413,11 @@
             // 
             // comboBox_BrowserSelect
             // 
+            this.comboBox_BrowserSelect.BackColor = System.Drawing.SystemColors.Info;
             this.comboBox_BrowserSelect.FormattingEnabled = true;
             this.comboBox_BrowserSelect.Location = new System.Drawing.Point(3, 3);
             this.comboBox_BrowserSelect.Name = "comboBox_BrowserSelect";
-            this.comboBox_BrowserSelect.Size = new System.Drawing.Size(151, 28);
+            this.comboBox_BrowserSelect.Size = new System.Drawing.Size(398, 28);
             this.comboBox_BrowserSelect.TabIndex = 3;
             // 
             // browserDetailsBindingSource
@@ -458,6 +477,7 @@
         private System.Windows.Forms.Button button_selectjson;
         private System.Windows.Forms.ComboBox comboBox_BrowserSelect;
         private System.Windows.Forms.BindingSource browserDetailsBindingSource;
+        private System.Windows.Forms.Button button_ManuallyDiscoverDevToolsSockets;
     }
 }
 

@@ -4,7 +4,6 @@ using System.Data;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ChromeDroid_TabMan.ConnectionAndImport;
 using ChromeDroid_TabMan.Data;
 using ChromeDroid_TabMan.Models;
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +17,29 @@ namespace ChromeDroid_TabMan
 {
     public partial class MainForm : Form
     {
+        string AdbPath { get; set; }
         string jsonLocation = string.Empty;
         DataTable dt = new DataTable();
         ITabsContainer tabsContainer =null;
+        List<BrowserComboItem> comboItemsAlignedList = new List<BrowserComboItem>();
+        private void InitializeOrResetBrowserListComboBox()
+        {
+            comboBox_BrowserSelect.DataSource = null;
+            comboItemsAlignedList = new List<BrowserComboItem>
+            {
+                new BrowserComboItem("Chrome",ConfigHelper.ADB.Chrome_PackageName,ConfigHelper.ADB.Chrome_ForwardParameter_Remote,true,false),
+                new BrowserComboItem("Opera",ConfigHelper.ADB.Opera_PackageName,ConfigHelper.ADB.Opera_ForwardParameter_Remote,true,false),
+                new BrowserComboItem("SamsungInternet",ConfigHelper.ADB.SamsungInternet_PackageName,ConfigHelper.ADB.SamsungInternet_ForwardParameter_Remote,true, false),
+                new BrowserComboItem("Edge",ConfigHelper.ADB.Edge_PackageName,ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd,false,false),
+                new BrowserComboItem("Brave",ConfigHelper.ADB.Brave_PackageName,ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd,false, false)
+            };
+            comboBox_BrowserSelect.DataSource = new List<BrowserComboItem>(comboItemsAlignedList);
+            //comboBox_BrowserSelect.Items.AddRange(comboItemsAlignedList.ToArray());
+            comboBox_BrowserSelect.DisplayMember = nameof(BrowserComboItem.Name);
+            comboBox_BrowserSelect.ValueMember = nameof(BrowserComboItem.BrowserDetails);
+            comboBox_BrowserSelect.SelectedIndex = 0;
+            //comboBox_BrowserSelect.SelectedItem = comboBox_BrowserSelect.Items[0];
+        }
         public MainForm()
         {
             dt.Columns.Add("TabNum",typeof(int));
@@ -32,18 +51,7 @@ namespace ChromeDroid_TabMan
 
             InitializeComponent();
 
-            comboBox_BrowserSelect.DataSource = new BrowserComboItem[]
-            {
-                new BrowserComboItem("Chrome",ConfigHelper.ADB.Chrome_PackageName,ConfigHelper.ADB.Chrome_ForwardParameter_Remote,true),
-                new BrowserComboItem("Opera",ConfigHelper.ADB.Opera_PackageName,ConfigHelper.ADB.Opera_ForwardParameter_Remote,true),
-                new BrowserComboItem("SamsungInternet",ConfigHelper.ADB.SamsungInternet_PackageName,ConfigHelper.ADB.SamsungInternet_ForwardParameter_Remote,true),
-                new BrowserComboItem("Edge",ConfigHelper.ADB.Edge_PackageName,ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd,false),
-                new BrowserComboItem("Brave",ConfigHelper.ADB.Brave_PackageName,ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd,false)
-            };
-            comboBox_BrowserSelect.DisplayMember = nameof(BrowserComboItem.BrowserName);
-            comboBox_BrowserSelect.ValueMember = nameof(BrowserComboItem.BrowserDetails);
-            comboBox_BrowserSelect.SelectedIndex= 0;
-
+            InitializeOrResetBrowserListComboBox();
 
             //var tabsList = TabsList.GetInstance();
             //FillMyTreeView(tabsList);
@@ -125,21 +133,30 @@ namespace ChromeDroid_TabMan
 
             //need to add adb location selection window and an argument to take that in the StartChr... function.
             //ImportUtilities.StartChromeAndroidJsonListServer(string.Empty); //for testing/debugging
-            //string adbPath = string.Empty;
-            //adbPath = ImportUtilities.GetADBPathDialog();
-            //if (adbPath == "-1") return;
-
-            string adbPath = "C:\\Program Files (x86)\\Minimal ADB and Fastboot\\adb.exe";
+            if (this.AdbPath == null || this.AdbPath.Length == 0)
+            {
+                AdbPath = ImportUtilities.GetADBPathDialog();
+                if (AdbPath == "-1")
+                {
+                    AdbPath = string.Empty;
+                    return;
+                }
+            }
+            //string adbPath = "C:\\Program Files (x86)\\Minimal ADB and Fastboot\\adb.exe";
             //IAdbConnector adbConnector = new StaticSocketNameChromiumAdbConnector(adbPath, ConfigHelper.ADB.Chrome_PackageName, ConfigHelper.ADB.Chrome_ForwardParameter_Remote);
             IAdbConnector adbConnector; //= new DynamicSocketNamePidAtEndChromiumAdbConnector(adbPath, ConfigHelper.ADB.Edge_PackageName, ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd);
-            BrowserDetailsStruct browserDetails = (BrowserDetailsStruct)comboBox_BrowserSelect.SelectedValue;
-            if (browserDetails.IsSocketNameFull)
-                adbConnector = new StaticSocketNameChromiumAdbConnector(adbPath, browserDetails.PackageName, browserDetails.SocketNameFullOrPartial);
+            BrowserDetailsStruct browserDetails = (BrowserDetailsStruct) comboBox_BrowserSelect.SelectedValue;//.SelectedItem).BrowserDetails;
+            if (browserDetails.PackageName == null && browserDetails.IsSocketNameFull)
+                adbConnector = new DiscoveredSocketOnlyAdbConnector(AdbPath, browserDetails.SocketNameFullOrPartial);
+            else if (browserDetails.IsSocketNameFull)
+                adbConnector = new StaticSocketNameChromiumAdbConnector(AdbPath, browserDetails.PackageName, browserDetails.SocketNameFullOrPartial);
             else
-                adbConnector = new DynamicSocketNamePidAtEndChromiumAdbConnector(adbPath, browserDetails.PackageName, browserDetails.SocketNameFullOrPartial);
+                adbConnector = new DynamicSocketNamePidAtEndChromiumAdbConnector(AdbPath, browserDetails.PackageName, browserDetails.SocketNameFullOrPartial);
 
             ITabsJsonFetcher tabsJsonFetcher = new AdbTabsJsonFetcher(adbConnector);
             jsonLocation = tabsJsonFetcher.FetchTabsJson();
+
+            comboBox_BrowserSelect.Enabled= false;
 
             connectGroupBox.ForeColor = Color.Lime;
             importAndProcessGroupbox.ForeColor = Color.Orange;
@@ -151,7 +168,9 @@ namespace ChromeDroid_TabMan
             importAndProcessGroupbox.ForeColor = Color.Orange;
 
             dt.Clear();
+            dataGridView1.Refresh();
             tabListTree.Nodes.Clear();
+            tabListTree.Refresh();
 
             ITabsImporter tabsImporter = new JsonToTabsImporter(jsonLocation);
             tabsContainer = tabsImporter.Import();
@@ -241,6 +260,80 @@ namespace ChromeDroid_TabMan
         private void browserDetailsBindingSource_CurrentChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button_ManuallyDiscoverDevToolsSockets_Click(object sender, EventArgs e)//open your targeted browser on your android phone to make sure its devtools socket is open.
+        {
+            MessageBox.Show("This feature will discover/rediscover and verify DevTools sockets available on your device. \nMake sure your browser of interest is open on your device and your device is connected.\n If one of the listed browsers isn't being verified, it may be listed below as a separate search result.","READ ME!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            if (this.AdbPath == null || this.AdbPath.Length == 0)
+            {
+                AdbPath = ImportUtilities.GetADBPathDialog();
+                if (AdbPath == "-1")
+                {
+                    AdbPath = string.Empty;
+                    return;
+                }
+            }
+
+            var devToolsSockets = ImportUtilities.GetDevToolsSockets(AdbPath);
+            InitializeOrResetBrowserListComboBox();
+
+            for(int i= 0;i<comboItemsAlignedList.Count();i++)
+            {
+                var browser = comboItemsAlignedList[i];
+                var currBD = browser.BrowserDetails;
+                BrowserComboItem newBrowserComboItem = null;
+                
+                var socketFullName = browser.BrowserDetails.SocketNameFullOrPartial;
+                if (!currBD.IsSocketNameFull && currBD.PackageName!=null || currBD.PackageName==ConfigHelper.ADB.Chrome_PackageName)//the || currBD.PackageName==ConfigHelper.ADB.Chrome_PackageName condition fixes the condition where one of the other chromium browsers somehow gets the name default devtools socket before chrome.
+                {
+                    
+                    try
+                    {
+                        socketFullName = currBD.SocketNameFullOrPartial + "_" + ImportUtilities.GetChromiumBrowserPid(AdbPath, currBD.PackageName, false);
+                    }
+                    catch(PidNotParsedException pidEx)
+                    {
+                        continue;
+                    }
+                    if(devToolsSockets.Any(s=>(socketFullName=="localabstract:"+s.Replace("\r", "").Replace("\n", "").Replace("@", ""))))
+                    {
+                        browser.BrowserDetails = new BrowserDetailsStruct("[✓]" + currBD.BrowserName, currBD.PackageName,socketFullName, true, true);
+                    }
+                }
+                else
+                {
+                    if (devToolsSockets.Any(s => (socketFullName == "localabstract:" + s.Replace("\r", "").Replace("\n", "").Replace("@", ""))))
+                    {
+                        browser.BrowserDetails = new BrowserDetailsStruct("[✓]" + currBD.BrowserName, currBD.PackageName, socketFullName, true, true);
+                    }
+                }
+
+                if(newBrowserComboItem!=null)
+                {
+                    comboItemsAlignedList.RemoveAt(i);
+                    comboItemsAlignedList.Add(newBrowserComboItem);
+                }
+                devToolsSockets.RemoveAll(s => (socketFullName == "localabstract:" + s.Replace("\r", "").Replace("\n", "").Replace("@", "")));
+            }
+            foreach(string socket in devToolsSockets)
+            {
+                if (socket == string.Empty)
+                    continue;
+                string nSocket = socket.Replace("\r", "").Replace("\n", "").Replace("@","");
+                BrowserComboItem browser = new("[🔍]"+"localabstract:" + nSocket, null, "localabstract:" + nSocket, true, true);
+                //comboBox_BrowserSelect.Items.Add(browser);
+                comboItemsAlignedList.Add(browser);
+            }
+
+            comboBox_BrowserSelect.DataSource = null;
+            comboBox_BrowserSelect.DataSource = new List<BrowserComboItem>(comboItemsAlignedList);
+            comboBox_BrowserSelect.SelectedIndex = 0;
+            comboBox_BrowserSelect.SelectedItem = comboBox_BrowserSelect.Items[0];
+            comboBox_BrowserSelect.DisplayMember = nameof(BrowserComboItem.Name);
+            comboBox_BrowserSelect.ValueMember = nameof(BrowserComboItem.BrowserDetails);
+            comboBox_BrowserSelect.Refresh();
         }
     }
 

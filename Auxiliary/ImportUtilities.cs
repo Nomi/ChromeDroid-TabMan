@@ -6,19 +6,20 @@ using System.Windows.Forms;
 //using JQ.Net.JQ;
 using System.Collections.Generic;
 using System.Text.Json;
-using ChromeDroid_TabMan.Auxiliary;
 using Newtonsoft.Json;
 using System.Linq;
 using ChromeDroid_TabMan.Data;
 using AdvancedSharpAdbClient;
 using ChromeDroid_TabMan.Connection_and_Import;
 using ChromeDroid_TabMan.DTOs;
+using System.Net.Http;
+using AdvancedSharpAdbClient.DeviceCommands;
 
 
 //#define _USE_JQ
 
 
-namespace ChromeDroid_TabMan.ConnectionAndImport
+namespace ChromeDroid_TabMan.Auxiliary
 {
 
     public static class ImportUtilities
@@ -28,7 +29,7 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             StartADB,
             ConnectToDevice
         };
-        private static System.Diagnostics.Process proc = null;
+        private static Process proc = null;
         private static NextStepImpUtil nextStep = NextStepImpUtil.StartADB;
 
         public struct ClientAndDevice_Adb
@@ -38,6 +39,16 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
         }
         public static ClientAndDevice_Adb ConnectAndGetAdbClientAndDevice(string adbPath)
         {
+            if (!AdbServer.Instance.GetStatus().IsRunning)
+            {
+                AdbServer server = new AdbServer();
+                StartServerResult result = server.StartServer(adbPath, false); //(@"C:\adb\adb.exe", false);
+                if (result != StartServerResult.Started)
+                {
+                    Console.WriteLine("Can't start adb server");
+                }
+            }
+
             AdbClient client;
             DeviceData device;
 
@@ -50,34 +61,67 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             clientAndDevice_Adb.device = device;
             return clientAndDevice_Adb;
         }
-        public static string StartChromeAndroidJsonListServer(string adbPath,string browserPackageName,string browserRemoteForwardParameter)
+        public static string GetChromiumBrowserPid(string adbPath, string browserPackageName, bool startBrowserAutomatically = true)
         {
             ClientAndDevice_Adb clientAndDevice_Adb = ImportUtilities.ConnectAndGetAdbClientAndDevice(adbPath);
             AdbClient client = clientAndDevice_Adb.client;
             DeviceData device = clientAndDevice_Adb.device;
 
-            client.StartApp(device, browserPackageName);
+            if(startBrowserAutomatically)
+                client.StartApp(device, browserPackageName);
+
+            ConsoleOutputReceiver cOR = new ConsoleOutputReceiver();
+            client.ExecuteShellCommand(device, "pidof " + browserPackageName, cOR);
+
+            cOR.Flush();
+
+            int pid;
+            try
+            {
+                pid = int.Parse(cOR.ToString()); //could possibly have used TryParse in a better setup/context.
+            }
+            catch(System.FormatException e)
+            {
+                throw new PidNotParsedException();
+            }
+
+
+            return pid.ToString();
+        }
+        public static string StartChromeAndroidJsonListServer(string adbPath, string browserPackageName, string browserRemoteForwardParameter, bool startBrowserAutomatically = true)
+        {
+            ClientAndDevice_Adb clientAndDevice_Adb = ConnectAndGetAdbClientAndDevice(adbPath);
+            AdbClient client = clientAndDevice_Adb.client;
+            DeviceData device = clientAndDevice_Adb.device;
+
+            if(startBrowserAutomatically)
+                client.StartApp(device, browserPackageName);
 
             string forwardParamLocal = ConfigHelper.ADB.ForwardParameter_Local;
-            client.CreateForward(device,forwardParamLocal,browserRemoteForwardParameter,true);//procStartInfo.Arguments = " - d forward tcp:9222 localabstract:chrome_devtools_remote";
+            client.CreateForward(device, forwardParamLocal, browserRemoteForwardParameter, true);//procStartInfo.Arguments = " - d forward tcp:9222 localabstract:chrome_devtools_remote";
             return ConfigHelper.ADB.TabsJsonListURL;
         }
 
-        public static string DownloadTabListJSON(string tabsJsonUrl="", string outputJsonFileName="")
+        public static string DownloadTabListJSON(string tabsJsonUrl = "", string outputJsonFileName = "")
         {
             if (tabsJsonUrl == "")
                 tabsJsonUrl = ConfigHelper.ADB.TabsJsonListURL;
             if (outputJsonFileName == "")
                 tabsJsonUrl = ConfigHelper.FileNamesAndPaths.OutputJsonFileName;
 
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(tabsJsonUrl);
-            httpWebRequest.Method = WebRequestMethods.Http.Get;
-            httpWebRequest.Accept = "application/json";
-            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            HttpClient httpClient = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Get, tabsJsonUrl);
             string text;
-            var response = (HttpWebResponse)httpWebRequest.GetResponse();
+            var response = httpClient.SendAsync(request).Result;
 
-            using (var sr = new StreamReader(response.GetResponseStream()))
+            //HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(tabsJsonUrl);
+            //httpWebRequest.Method = WebRequestMethods.Http.Get;
+            //httpWebRequest.Accept = "application/json";
+            //httpWebRequest.ContentType = "application/json; charset=utf-8";
+            //string text;
+            //var response = (HttpWebResponse)httpWebRequest.GetResponse();
+
+            using (var sr = new StreamReader(response.Content.ReadAsStream()))//response.GetResponseStream()))
             {
                 text = sr.ReadToEnd();
             }
@@ -87,7 +131,7 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             //string sourceFile = ConfigHelper.JsonFileName;
             string prevOutPutJsonFileName = outputJsonFileName + ConfigHelper.FileNamesAndPaths.BackUpExtensionWithDot;
             // Creating FileInfo  
-            System.IO.FileInfo fileInfo = new System.IO.FileInfo(outputJsonFileName);
+            FileInfo fileInfo = new FileInfo(outputJsonFileName);
             // Checking if file exists. 
             if (fileInfo.Exists)
             {
@@ -101,28 +145,40 @@ namespace ChromeDroid_TabMan.ConnectionAndImport
             return outputJsonFileName;
         }
 
-        public static List<BasicTabInf> LoadJson(string jsonPath="")
+        public static List<BasicTabInf> LoadJson(string jsonPath = "")
         {
 
             //bool usingDefaultPath = false;
             if (jsonPath == "")
             {
                 // "\"" was needed for passing as argument to JQ, not needed anymore.
-                jsonPath =  System.AppContext.BaseDirectory + ConfigHelper.FileNamesAndPaths.OutputJsonFileName; //"\"" + System.AppContext.BaseDirectory + +ConfigHelper.FileNamesAndPaths.JsonFileName+ "\"";
+                jsonPath = AppContext.BaseDirectory + ConfigHelper.FileNamesAndPaths.OutputJsonFileName; //"\"" + System.AppContext.BaseDirectory + +ConfigHelper.FileNamesAndPaths.JsonFileName+ "\"";
                 //usingDefaultPath = true;
             }
-            
+
             string jsonText = File.ReadAllText(jsonPath);
 
             return System.Text.Json.JsonSerializer.Deserialize<List<BasicTabInf>>(jsonText); //JsonConvert.DeserializeObject<>(jsonText);
         }
         public static void GetURLtxtAndTITLEtxtFromJSON(List<BasicTabInf> basicTabInfs)
         {
-            File.WriteAllLines(ConfigHelper.FileNamesAndPaths.CurrentListOfURLsTxtFileName, basicTabInfs.Select(x=>x.url));//select preserves order.
+            File.WriteAllLines(ConfigHelper.FileNamesAndPaths.CurrentListOfURLsTxtFileName, basicTabInfs.Select(x => x.url));//select preserves order.
             File.WriteAllLines(ConfigHelper.FileNamesAndPaths.CurrentListOfTitlesTxtFileName, basicTabInfs.Select(x => x.lastKnownTitle));//select preserves order.
         }
 
+        public static List<string> GetDevToolsSockets(string adbPath)
+        {
+            ClientAndDevice_Adb clientAndDevice_Adb = ImportUtilities.ConnectAndGetAdbClientAndDevice(adbPath);
+            AdbClient client = clientAndDevice_Adb.client;
+            DeviceData device = clientAndDevice_Adb.device;
 
+            ConsoleOutputReceiver cOR = new();
+            client.ExecuteShellCommand(device, @"ss -a 2>/dev/null| grep devtools| cut -F 5", cOR);
+            string response = cOR.ToString();
+
+            return response.Split("\n").ToList();
+
+        }
         public static string GetADBPathDialog()
         {
             //var fileContent = string.Empty;

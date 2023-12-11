@@ -12,7 +12,8 @@ namespace ChromeDroid_TabMan.DTOs
         public string PackageName;
         public string SocketNameFullOrPartial;
         public bool IsSocketNameFull;
-        public BrowserDetailsStruct(string browserName, string packageName, string socketNameFullOrPartial, bool isSocketNameFull)
+        public bool DiscoveredOrRediscovered;
+        public BrowserDetailsStruct(string browserName, string packageName, string socketNameFullOrPartial, bool isSocketNameFull, bool discoveredOrRediscovered)
         {
             BrowserName = browserName;
             PackageName = packageName;
@@ -24,11 +25,11 @@ namespace ChromeDroid_TabMan.DTOs
     {
 
         public BrowserDetailsStruct BrowserDetails { get; set; }
-        public string BrowserName => BrowserDetails.BrowserName;
+        public string Name => ((BrowserDetails.IsSocketNameFull && BrowserDetails.SocketNameFullOrPartial!=BrowserDetails.BrowserName) ? (BrowserDetails.BrowserName + " (" + BrowserDetails.SocketNameFullOrPartial + ")" ): BrowserDetails.BrowserName);
         
-        public BrowserComboItem(string name, string packageName, string socketNameFullOrPartial, bool isSocketNameFull)
+        public BrowserComboItem(string name, string packageName, string socketNameFullOrPartial, bool isSocketNameFull, bool discoveredOrRediscovered)
         {
-            BrowserDetails = new BrowserDetailsStruct(name, packageName,socketNameFullOrPartial,isSocketNameFull);
+            BrowserDetails = new BrowserDetailsStruct(name, packageName,socketNameFullOrPartial,isSocketNameFull, discoveredOrRediscovered);
         }
 
     }

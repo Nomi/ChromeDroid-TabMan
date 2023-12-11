@@ -66,7 +66,7 @@ namespace ChromeDroid_TabMan.Auxiliary
             public static string Edge_PackageName => "com.microsoft.emmx";
             public static string Brave_PackageName => "com.brave.browser";
             public static string LocalHostString => "localhost";
-            public static string ForwardParameter_Local_PortOnly => "9222";
+            public static string ForwardParameter_Local_PortOnly => "9223";
             public static string ForwardParameter_Local => "tcp:"+ForwardParameter_Local_PortOnly;
             public static string SubUrlPathForTabsJsonList => "/json/list";
             public static string TabsJsonListURL => "http://" + LocalHostString + ":" + ForwardParameter_Local_PortOnly + SubUrlPathForTabsJsonList;
