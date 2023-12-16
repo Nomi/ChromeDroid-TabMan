@@ -6,10 +6,35 @@ using System.Threading.Tasks;
 
 namespace ChromeDroid_TabMan.DTOs
 {
+    public enum DiscoveryStateEnum
+    {
+        NotFound=0,
+        NotSearchedFor,
+        Verified,
+        Discovered,
+        RediscoveredAndFixed,
+        RediscoveredAndFilledRestOfTheSocket
+    };
+    public struct BrowserDetailsStruct
+    {
+        public string BrowserName;
+        public string PackageName;
+        public string SocketNameFullOrPartial;
+        public bool IsSocketNameFull;
+        public DiscoveryStateEnum DiscoveryState;
+        public BrowserDetailsStruct(string browserName, string packageName, string socketNameFullOrPartial, bool isSocketNameFull, DiscoveryStateEnum discoveryState)
+        {
+            BrowserName = browserName;
+            PackageName = packageName;
+            SocketNameFullOrPartial = socketNameFullOrPartial;
+            IsSocketNameFull = isSocketNameFull;
+            DiscoveryState = discoveryState;
+        }
+    }
     public class BrowserComboItem
     {
 
-        public BrowserInfo BrowserDetails { get; set; }
+        public BrowserDetailsStruct BrowserDetails { get; set; }
         //public string Name => ((BrowserDetails.IsSocketNameFull && BrowserDetails.SocketNameFullOrPartial!=BrowserDetails.BrowserName) ? (BrowserDetails.BrowserName + " (" + BrowserDetails.SocketNameFullOrPartial + ")" ): BrowserDetails.BrowserName);
         public string Name
         {
@@ -33,7 +58,7 @@ namespace ChromeDroid_TabMan.DTOs
                         prefix = "[✔*] ";
                         break;
                     case DiscoveryStateEnum.RediscoveredAndFixed:
-                        prefix = "[FIXED]"; //"[**✔**] ";
+                        prefix = "[ⒻⒾⓍⒺⒹ] "; //"[**✔**] ";
                         break;
                     case DiscoveryStateEnum.Discovered:
                         prefix = "[🔍] ";
@@ -46,13 +71,9 @@ namespace ChromeDroid_TabMan.DTOs
 
             }
         }
-        public BrowserComboItem(string name, string packageName, string socketNameFullOrPartialIncludingConnBase, bool isSocketNameFull, DiscoveryStateEnum discoveryState)
+        public BrowserComboItem(string name, string packageName, string socketNameFullOrPartial, bool isSocketNameFull, DiscoveryStateEnum discoveryState)
         {
-            BrowserDetails = new BrowserInfo(name,packageName,socketNameFullOrPartialIncludingConnBase,isSocketNameFull, discoveryState);
-        }
-        public BrowserComboItem(BrowserInfo browser)
-        {
-            BrowserDetails = browser;
+            BrowserDetails = new BrowserDetailsStruct(name, packageName,socketNameFullOrPartial,isSocketNameFull, discoveryState);
         }
 
     }
