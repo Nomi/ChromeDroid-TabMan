@@ -20,7 +20,7 @@ namespace ChromeDroid_TabMan.Connection_and_Import
             string jsonPath = null;
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = "c:\\";
+                //openFileDialog.InitialDirectory = "c:\\";
                 openFileDialog.Filter = "JSON and JSON.BAK files (*.json, *.json.bak)|*.json;*.json.bak|All Files (*.*)|*.*";
                 openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
