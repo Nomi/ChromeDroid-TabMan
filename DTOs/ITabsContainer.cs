@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChromeDroid_TabMan.DTOs
 {
-    internal interface ITabsContainer
+    public interface ITabsContainer
     {
         ICollection<TabInf> AllTabInfs { get; }
         int CountOfBaseURLs { get; }
