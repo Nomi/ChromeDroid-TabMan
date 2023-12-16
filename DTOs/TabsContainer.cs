@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChromeDroid_TabMan.DTOs
 {
-    internal class TabsContainer : ITabsContainer
+    public class TabsContainer : ITabsContainer
     {
         public ICollection<TabInf> AllTabInfs { get; }
         public IDictionary<string, List<TabInf>> BaseUrlToTabInfCollectionMap { get; }

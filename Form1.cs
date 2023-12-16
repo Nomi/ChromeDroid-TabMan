@@ -19,73 +19,22 @@ namespace ChromeDroid_TabMan
     {
         string AdbPath { get; set; }
         string jsonLocation = string.Empty;
-        DataTable dt = new DataTable();
+        DataTable dataTable = new DataTable();
         ITabsContainer tabsContainer =null;
         
         public MainForm()
         {
-            dt.Columns.Add("TabNum",typeof(int));
-            dt.Columns.Add("Title");
-            dt.Columns.Add("URL");
-            dt.Columns.Add("Base URL");
-
-
 
             InitializeComponent();
 
+            WinFormsUtils.InitializeOrResetDataTableForTabsDataGridView(ref dataTable, ref dataGridView1);
             WinFormsUtils.InitializeOrResetBrowserListComboBox(comboBox_BrowserSelect);
-
             //var tabsList = TabsList.GetInstance();
             //FillMyTreeView(tabsList);
             //tabsList.ExportToHTML();
             //tabsList.ExportToNetscapeBookmarksHTML();
         }
 
-        //private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        //{
-
-        //    if(e.RowIndex>0 && e.ColumnIndex==0)
-        //    {
-        //        if()
-        //    }
-        //    //if e.RowIndex > 0 And e.ColumnIndex = 0 Then
-        //    //                If dgvProduct.Item(0, e.RowIndex - 1).Value = e.Value Then
-        //    //                    e.Value = ""
-        //    //                ElseIf e.RowIndex < dgvProduct.Rows.Count - 1 Then
-        //    //                    dgvProduct.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.White
-        //    //                End If
-        //    //End If
-        //}
-        private void FillMyTreeView()
-        {
-            tabListTree.BeginUpdate();
-            int baseUrlIdx = 0;
-            foreach (var baseUrl in tabsContainer.BaseUrlToTabInfCollectionMap.Keys)
-            {
-                var currMap = tabsContainer.BaseUrlToTabInfCollectionMap;
-                tabListTree.Nodes.Add(new TreeNode(baseUrl));
-                int childNodesCount=0;
-                tabListTree.Nodes[baseUrlIdx].Nodes.AddRange(currMap[baseUrl].Select(x => new TreeNode(x.URL)).ToArray());
-                baseUrlIdx++;
-            }
-            tabListTree.EndUpdate();
-            tabListTree.Update();
-        }
-
-        private void FillDataGridView1()
-        {
-            foreach (TabInf tab in tabsContainer.AllTabInfs)
-            {
-                DataRow dr = dt.NewRow();
-                dr["TabNum"] = tab.TabNum;
-                dr["Title"] = tab.LastKnownTitle;
-                dr["URL"] = tab.URL;
-                dr["Base URL"] = tab.BaseWebsite;
-                dt.Rows.Add(dr);
-            }
-            this.dataGridView1.DataSource = dt;
-            dataGridView1.Refresh();
-        }
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
@@ -127,13 +76,13 @@ namespace ChromeDroid_TabMan
             //string adbPath = "C:\\Program Files (x86)\\Minimal ADB and Fastboot\\adb.exe";
             //IAdbConnector adbConnector = new StaticSocketNameChromiumAdbConnector(adbPath, ConfigHelper.ADB.Chrome_PackageName, ConfigHelper.ADB.Chrome_ForwardParameter_Remote);
             IAdbConnector adbConnector; //= new DynamicSocketNamePidAtEndChromiumAdbConnector(adbPath, ConfigHelper.ADB.Edge_PackageName, ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd);
-            BrowserDetailsStruct browserDetails = (BrowserDetailsStruct) comboBox_BrowserSelect.SelectedValue;//.SelectedItem).BrowserDetails;
-            if (browserDetails.PackageName == null && browserDetails.IsSocketNameFull)
-                adbConnector = new DiscoveredSocketOnlyAdbConnector(AdbPath, browserDetails.SocketNameFullOrPartial);
-            else if (browserDetails.IsSocketNameFull)
-                adbConnector = new StaticSocketNameChromiumAdbConnector(AdbPath, browserDetails.PackageName, browserDetails.SocketNameFullOrPartial);
+            BrowserInfo browserDetails = (BrowserInfo) comboBox_BrowserSelect.SelectedValue;//.SelectedItem).BrowserDetails;
+            if (browserDetails.PackageName == null && browserDetails.Socket.IsSocketNameComplete)
+                adbConnector = new DiscoveredSocketOnlyAdbConnector(AdbPath, browserDetails.Socket.SocketConnectionStr);
+            else if (browserDetails.Socket.IsSocketNameComplete)
+                adbConnector = new StaticSocketNameChromiumAdbConnector(AdbPath, browserDetails.PackageName, browserDetails.Socket.SocketConnectionStr);
             else
-                adbConnector = new DynamicSocketNamePidAtEndChromiumAdbConnector(AdbPath, browserDetails.PackageName, browserDetails.SocketNameFullOrPartial);
+                adbConnector = new DynamicSocketNamePidAtEndChromiumAdbConnector(AdbPath, browserDetails.PackageName, browserDetails.Socket.SocketConnectionStr);
 
             ITabsJsonFetcher tabsJsonFetcher = new AdbTabsJsonFetcher(adbConnector);
             jsonLocation = tabsJsonFetcher.FetchTabsJson();
@@ -149,7 +98,7 @@ namespace ChromeDroid_TabMan
             groupBox1.ForeColor = Color.White;
             importAndProcessGroupbox.ForeColor = Color.Orange;
 
-            dt.Clear();
+            dataTable.Clear();
             dataGridView1.Refresh();
             tabListTree.Nodes.Clear();
             tabListTree.Refresh();
@@ -157,8 +106,8 @@ namespace ChromeDroid_TabMan
             ITabsImporter tabsImporter = new JsonToTabsImporter(jsonLocation);
             tabsContainer = tabsImporter.Import();
 
-            FillDataGridView1();
-            FillMyTreeView();
+            WinFormsUtils.FillDataGridView(tabsContainer.AllTabInfs, ref dataTable, ref dataGridView1);
+            WinFormsUtils.FillTreeView(tabsContainer, ref tabListTree);
 
 
             importAndProcessGroupbox.ForeColor = Color.Lime;
@@ -244,7 +193,7 @@ namespace ChromeDroid_TabMan
 
         }
 
-        private void button_FixOrDiscoverDevToolsSockets_Click(object sender, EventArgs e)//open your targeted browser on your android phone to make sure its devtools socket is open.
+        private async void button_FixOrDiscoverDevToolsSockets_Click_Async(object sender, EventArgs e)//open your targeted browser on your android phone to make sure its devtools socket is open.
         {
             MessageBox.Show("This feature will discover/rediscover and verify DevTools sockets available on your device. \nMake sure your browser of interest is open on your device and your device is connected.\n If one of the listed browsers isn't being verified, it may be listed below as a separate search result.", "READ ME!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -261,7 +210,8 @@ namespace ChromeDroid_TabMan
             var devToolsSocketsFound = BrowserDiscoveryUtils.GetDevToolsSockets(AdbPath);
 
             var newComboItemsList = BrowserDiscoveryUtils.GetDefaultBrowserComboItems();
-            BrowserDiscoveryUtils.VerifyExistingSockets(newComboItemsList, devToolsSocketsFound, AdbPath);
+            var adbConn = AdbConnection.ConnectAndOrGetInstance(AdbPath);
+            await BrowserDiscoveryUtils.VerifyExistingSocketsAsync(newComboItemsList, devToolsSocketsFound, adbConn);
             BrowserDiscoveryUtils.DiscoverNewSocketsAndOrFixKnownBrowsersWithUnexpectedSocketNames(newComboItemsList, devToolsSocketsFound, AdbPath);
             
 

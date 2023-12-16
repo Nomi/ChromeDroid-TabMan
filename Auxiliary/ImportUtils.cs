@@ -14,6 +14,7 @@ using ChromeDroid_TabMan.Connection_and_Import;
 using ChromeDroid_TabMan.DTOs;
 using System.Net.Http;
 using AdvancedSharpAdbClient.DeviceCommands;
+using System.Threading.Tasks;
 
 
 //#define _USE_JQ
@@ -72,6 +73,31 @@ namespace ChromeDroid_TabMan.Auxiliary
                 pid = int.Parse(cOR.ToString()); //could possibly have used TryParse in a better setup/context.
             }
             catch(System.FormatException e)
+            {
+                throw new PidNotParsedException();
+            }
+
+            return pid.ToString();
+        }
+        public static async Task<string> GetChromiumBrowserPidAsync(AdbConnection adbConnection, string browserPackageName, bool startBrowserAutomatically = true)
+        {
+            AdbClient client = adbConnection.client;
+            DeviceData device = adbConnection.device;
+
+            if (startBrowserAutomatically)
+                await client.StartAppAsync(device, browserPackageName);
+
+            ConsoleOutputReceiver cOR = new ConsoleOutputReceiver();
+            await client.ExecuteShellCommandAsync(device, "pidof " + browserPackageName, cOR);
+
+            cOR.Flush();
+
+            int pid;
+            try
+            {
+                pid = int.Parse(cOR.ToString()); //could possibly have used TryParse in a better setup/context.
+            }
+            catch (System.FormatException e)
             {
                 throw new PidNotParsedException();
             }
