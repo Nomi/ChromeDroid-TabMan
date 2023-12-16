@@ -26,7 +26,7 @@ namespace ChromeDroid_TabMan.Auxiliary
                 new BrowserComboItem("Opera",ConfigHelper.ADB.Opera_PackageName,ConfigHelper.ADB.Opera_ForwardParameter_Remote,true,DiscoveryStateEnum.NotSearchedFor),
                 new BrowserComboItem("SamsungInternet",ConfigHelper.ADB.SamsungInternet_PackageName,ConfigHelper.ADB.SamsungInternet_ForwardParameter_Remote,true,DiscoveryStateEnum.NotSearchedFor),
                 new BrowserComboItem("Edge",ConfigHelper.ADB.Edge_PackageName,ConfigHelper.ADB.EdgeAndBraveAndChrome_Base_ForwardParameterRemote__MissingPidAtEnd,false,DiscoveryStateEnum.NotSearchedFor),
-                //new BrowserComboItem("Brave",ConfigHelper.ADB.Brave_PackageName,ConfigHelper.ADB.EdgeAndBraveAndChrome_Base_ForwardParameterRemote__MissingPidAtEnd,false,DiscoveryStateEnum.NotSearchedFor)
+                new BrowserComboItem("Brave",ConfigHelper.ADB.Brave_PackageName,ConfigHelper.ADB.EdgeAndBraveAndChrome_Base_ForwardParameterRemote__MissingPidAtEnd,false,DiscoveryStateEnum.NotSearchedFor)
             };
         }
 
@@ -40,7 +40,9 @@ namespace ChromeDroid_TabMan.Auxiliary
             client.ExecuteShellCommand(device, @"ss -a 2>/dev/null| grep devtools| cut -F 5", cOR);
             string response = cOR.ToString();
 
-            return response.Split("\n").ToList();
+            List<string> result = response.Split("\n").Select(s => s.Replace("\r", "").Replace("\n", "").Replace("@", "")).ToList();
+            result.RemoveAll(s => (s == string.Empty));
+            return result;
         }
         public static async Task<List<string>> GetDevToolsSocketsNamesAsync(AdbConnection adbConnection)
         {
@@ -149,7 +151,7 @@ namespace ChromeDroid_TabMan.Auxiliary
                         }
                         //}
 
-                        existingBrowserComboList[preexistingIndex].DiscoveryState = discoveryState;
+                        existingBrowserComboList[preexistingIndex].BrowserDetails.DiscoveryState = discoveryState;
                         return;
                     }
                 }
