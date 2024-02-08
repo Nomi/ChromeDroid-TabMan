@@ -1,4 +1,5 @@
-﻿using ChromeDroid_TabMan.Data;
+﻿using ChromeDroid_TabMan.Auxiliary;
+using ChromeDroid_TabMan.Data;
 using ChromeDroid_TabMan.DTOs;
 using ChromeDroid_TabMan.Models;
 using System;
@@ -23,6 +24,7 @@ namespace ChromeDroid_TabMan.Connection_and_Import
 
             List<TabInf> tabInfs = new();
             Dictionary<string, List<TabInf>> baseUrlToTabInfListMap = new();
+            baseUrlToTabInfListMap.Add(ConfigHelper.UnidentifiedBaseUrlString, new()); //ensures this is first on the tree view.
 
             int basicTabInfsCount = basicTabInfs.Count;
             for(int i=0; i<basicTabInfsCount;i++ )
