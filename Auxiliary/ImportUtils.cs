@@ -35,7 +35,7 @@ namespace ChromeDroid_TabMan.Auxiliary
         {
             if (!AdbServer.Instance.GetStatus().IsRunning)
             {
-                AdbServer server = new AdbServer();
+                AdbServer server = new();
                 StartServerResult result = server.StartServer(adbPath, false); //(@"C:\adb\adb.exe", false);
                 if (result != StartServerResult.Started)
                 {
@@ -49,13 +49,10 @@ namespace ChromeDroid_TabMan.Auxiliary
 
             client = new AdbClient();
             client.Connect(ConfigHelper.ADB.HostURL);
-            device = client.GetDevices().FirstOrDefault(); // Get first connected device
-            if (device == null)
-                throw new AdbDeviceNotFoundException();
+            // Get first connected device:
+            device = client.GetDevices().FirstOrDefault() ?? throw new AdbDeviceNotFoundException();
 
-            ClientAndDevice_Adb clientAndDevice_Adb = new ClientAndDevice_Adb();
-            clientAndDevice_Adb.client = client;
-            clientAndDevice_Adb.device = device;
+            ClientAndDevice_Adb clientAndDevice_Adb = new ClientAndDevice_Adb { client = client, device = device };
             return clientAndDevice_Adb;
         }
         public static string GetChromiumBrowserPid(string adbPath, string browserPackageName, bool startBrowserAutomatically = true)
@@ -67,7 +64,7 @@ namespace ChromeDroid_TabMan.Auxiliary
             if(startBrowserAutomatically)
                 client.StartApp(device, browserPackageName);
 
-            ConsoleOutputReceiver cOR = new ConsoleOutputReceiver();
+            ConsoleOutputReceiver cOR = new();
             client.ExecuteShellCommand(device, "pidof " + browserPackageName, cOR);
 
             cOR.Flush();
@@ -77,7 +74,7 @@ namespace ChromeDroid_TabMan.Auxiliary
             {
                 pid = int.Parse(cOR.ToString()); //could possibly have used TryParse in a better setup/context.
             }
-            catch(System.FormatException e)
+            catch(System.FormatException _)
             {
                 throw new PidNotParsedException();
             }
@@ -92,7 +89,7 @@ namespace ChromeDroid_TabMan.Auxiliary
             if (startBrowserAutomatically)
                 await client.StartAppAsync(device, browserPackageName);
 
-            ConsoleOutputReceiver cOR = new ConsoleOutputReceiver();
+            ConsoleOutputReceiver cOR = new();
             await client.ExecuteShellCommandAsync(device, "pidof " + browserPackageName, cOR);
 
             cOR.Flush();
@@ -102,7 +99,7 @@ namespace ChromeDroid_TabMan.Auxiliary
             {
                 pid = int.Parse(cOR.ToString()); //could possibly have used TryParse in a better setup/context.
             }
-            catch (System.FormatException e)
+            catch (System.FormatException _)
             {
                 throw new PidNotParsedException();
             }
@@ -130,7 +127,7 @@ namespace ChromeDroid_TabMan.Auxiliary
             if (outputJsonFileName == "")
                 tabsJsonUrl = ConfigHelper.FileNamesAndPaths.OutputJsonFileName;
 
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = new();
             var request = new HttpRequestMessage(HttpMethod.Get, tabsJsonUrl);
             string text;
             var response = httpClient.SendAsync(request).Result;
@@ -145,7 +142,7 @@ namespace ChromeDroid_TabMan.Auxiliary
             //string sourceFile = ConfigHelper.JsonFileName;
             string prevOutPutJsonFileName = outputJsonFileName + ConfigHelper.FileNamesAndPaths.BackUpExtensionWithDot;
             // Creating FileInfo  
-            FileInfo fileInfo = new FileInfo(outputJsonFileName);
+            FileInfo fileInfo = new(outputJsonFileName);
             // Checking if file exists. 
             if (fileInfo.Exists)
             {
