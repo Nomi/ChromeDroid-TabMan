@@ -1,4 +1,5 @@
 ﻿using AdvancedSharpAdbClient;
+using AdvancedSharpAdbClient.Models;
 using ChromeDroid_TabMan.Auxiliary;
 using System;
 using System.Collections.Generic;
