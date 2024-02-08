@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 
-public static class GlobalExceptionHandler
+public static class GlobalUnhandledExceptionHandler
 {
     public static void Initialize()
     {
@@ -13,7 +13,7 @@ public static class GlobalExceptionHandler
     private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
     {
         Exception ex = e.Exception;
-        MessageBox.Show(ex.Message, $"Error: (unhandled exception:{ex.GetType().Name})", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(ex.Message, $"Error: (unhandled exception: {ex.GetType().Name})", MessageBoxButtons.OK, MessageBoxIcon.Error);
         //write stack trace somewhere? and/or add logging?
     }
 

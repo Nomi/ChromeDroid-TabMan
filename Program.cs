@@ -27,7 +27,7 @@ namespace ChromeDroid_TabMan
             Application.SetCompatibleTextRenderingDefault(false);
             //TabsList tabbys = new TabsList(false);
             MainForm mainForm = new MainForm();//can pass tabblist bby reference??
-            GlobalExceptionHandler.Initialize();
+            GlobalUnhandledExceptionHandler.Initialize();
             Application.Run(mainForm); 
             // REPLACE STUFF WITH DATABINDING SOMEHOW?????
         }
