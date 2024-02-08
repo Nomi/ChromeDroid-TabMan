@@ -167,7 +167,7 @@ namespace ChromeDroid_TabMan.Auxiliary
         
         public static BrowserJsonVersionDTO GetBrowserDetails(string adbPath,string forwardParameter_Remote)
         {
-            IAdbConnector adbConnector = new DiscoveredSocketOnlyAdbConnector(adbPath, forwardParameter_Remote);
+            IChromiumDevToolsConnector adbConnector = new DiscoveredSocketOnlyDevToolsConnector(adbPath, forwardParameter_Remote);
             adbConnector.StartAdbJsonListServer();
             HttpClient httpClient = new();
             BrowserJsonVersionDTO response = httpClient.GetFromJsonAsync<BrowserJsonVersionDTO>(ConfigHelper.ADB.BrowserJsonVersionURL).Result;

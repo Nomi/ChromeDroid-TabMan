@@ -40,6 +40,7 @@ namespace ChromeDroid_TabMan.Auxiliary
                 if (result != StartServerResult.Started)
                 {
                     Console.WriteLine("Can't start adb server");
+                    throw new Exception("ERROR: Cannot start ADB server.");
                 }
             }
 
@@ -49,6 +50,8 @@ namespace ChromeDroid_TabMan.Auxiliary
             client = new AdbClient();
             client.Connect(ConfigHelper.ADB.HostURL);
             device = client.GetDevices().FirstOrDefault(); // Get first connected device
+            if (device == null)
+                throw new AdbDeviceNotFoundException();
 
             ClientAndDevice_Adb clientAndDevice_Adb = new ClientAndDevice_Adb();
             clientAndDevice_Adb.client = client;

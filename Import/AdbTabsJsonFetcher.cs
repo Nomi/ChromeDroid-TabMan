@@ -11,15 +11,15 @@ namespace ChromeDroid_TabMan.Connection_and_Import
 {
     internal class AdbTabsJsonFetcher : ITabsJsonFetcher
     { 
-        public IAdbConnector _adbConnector { get; }
-        public AdbTabsJsonFetcher(IAdbConnector adbConnector)
+        public IChromiumDevToolsConnector _ChromiumDevToolsConnector { get; }
+        public AdbTabsJsonFetcher(IChromiumDevToolsConnector adbConnector)
         { 
-            _adbConnector = adbConnector;
+            _ChromiumDevToolsConnector = adbConnector;
         }
 
         public string FetchTabsJson()
         {
-            string jsonListTabsUrl = _adbConnector.StartAdbJsonListServer();
+            string jsonListTabsUrl = _ChromiumDevToolsConnector.StartAdbJsonListServer();
             return ImportUtils.DownloadTabListJSON(tabsJsonUrl: jsonListTabsUrl, outputJsonFileName: ConfigHelper.FileNamesAndPaths.OutputJsonFileName);
         }
     }

@@ -75,14 +75,14 @@ namespace ChromeDroid_TabMan
             }
             //string adbPath = "C:\\Program Files (x86)\\Minimal ADB and Fastboot\\adb.exe";
             //IAdbConnector adbConnector = new StaticSocketNameChromiumAdbConnector(adbPath, ConfigHelper.ADB.Chrome_PackageName, ConfigHelper.ADB.Chrome_ForwardParameter_Remote);
-            IAdbConnector adbConnector; //= new DynamicSocketNamePidAtEndChromiumAdbConnector(adbPath, ConfigHelper.ADB.Edge_PackageName, ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd);
+            IChromiumDevToolsConnector adbConnector; //= new DynamicSocketNamePidAtEndChromiumAdbConnector(adbPath, ConfigHelper.ADB.Edge_PackageName, ConfigHelper.ADB.EdgeAndBrave_Base_ForwardParameterRemote__MissingPidAtEnd);
             BrowserInfo browserDetails = (BrowserInfo) comboBox_BrowserSelect.SelectedValue;//.SelectedItem).BrowserDetails;
             if (browserDetails.PackageName == null && browserDetails.Socket.IsSocketNameComplete)
-                adbConnector = new DiscoveredSocketOnlyAdbConnector(AdbPath, browserDetails.Socket.SocketConnectionStr);
+                adbConnector = new DiscoveredSocketOnlyDevToolsConnector(AdbPath, browserDetails.Socket.SocketConnectionStr);
             else if (browserDetails.Socket.IsSocketNameComplete)
-                adbConnector = new StaticSocketNameChromiumAdbConnector(AdbPath, browserDetails.PackageName, browserDetails.Socket.SocketConnectionStr);
+                adbConnector = new StaticSocketNameChromiumDevToolsConnector(AdbPath, browserDetails.PackageName, browserDetails.Socket.SocketConnectionStr);
             else
-                adbConnector = new DynamicSocketNamePidAtEndChromiumAdbConnector(AdbPath, browserDetails.PackageName, browserDetails.Socket.SocketConnectionStr);
+                adbConnector = new DynamicSocketNamePidAtEndChromiumDevToolsConnector(AdbPath, browserDetails.PackageName, browserDetails.Socket.SocketConnectionStr);
 
             ITabsJsonFetcher tabsJsonFetcher = new AdbTabsJsonFetcher(adbConnector);
             jsonLocation = tabsJsonFetcher.FetchTabsJson();

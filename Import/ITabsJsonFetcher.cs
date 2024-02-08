@@ -9,7 +9,7 @@ namespace ChromeDroid_TabMan.Connection_and_Import
     internal interface ITabsJsonFetcher
     {
 #nullable enable
-        IAdbConnector? _adbConnector { get; }
+        IChromiumDevToolsConnector? _ChromiumDevToolsConnector { get; }
 #nullable disable
         public string FetchTabsJson();
     }

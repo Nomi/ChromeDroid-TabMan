@@ -10,7 +10,7 @@ namespace ChromeDroid_TabMan.Connection_and_Import
     internal class SelectFileDialogTabsJsonFetcher : ITabsJsonFetcher
     {
 #nullable enable
-        public IAdbConnector? _adbConnector { get; } = null;
+        public IChromiumDevToolsConnector? _ChromiumDevToolsConnector { get; } = null;
 #nullable disable
         public SelectFileDialogTabsJsonFetcher() { }
         public string FetchTabsJson()

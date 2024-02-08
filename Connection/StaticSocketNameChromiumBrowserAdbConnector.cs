@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ChromeDroid_TabMan.Connection_and_Import
 {
-    internal class StaticSocketNameChromiumAdbConnector : IAdbConnector
+    internal class StaticSocketNameChromiumDevToolsConnector : IChromiumDevToolsConnector
     {
         public string AdbPath { get; }
         public string BrowserPackageName { get; }
         public string ForwardParameter_Remote { get; }
-        public StaticSocketNameChromiumAdbConnector(string adbPath, string browserPackageName, string forwardParameter_Remote)
+        public StaticSocketNameChromiumDevToolsConnector(string adbPath, string browserPackageName, string forwardParameter_Remote)
         {
             AdbPath = adbPath;
             BrowserPackageName = browserPackageName;
