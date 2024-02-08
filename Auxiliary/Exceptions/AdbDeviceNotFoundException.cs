@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChromeDroid_TabMan.Auxiliary
+namespace ChromeDroid_TabMan.Auxiliary.Exceptions
 {
     public class AdbDeviceNotFoundException : Exception
     {

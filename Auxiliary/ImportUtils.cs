@@ -17,6 +17,7 @@ using ChromeDroid_TabMan.Connection_and_Import;
 using ChromeDroid_TabMan.DTOs;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ChromeDroid_TabMan.Auxiliary.Exceptions;
 
 
 //#define _USE_JQ

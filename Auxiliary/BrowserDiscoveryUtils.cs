@@ -15,6 +15,7 @@ using System.Net.Http.Json;
 using System.Security.Cryptography.X509Certificates;
 using System.Reflection.PortableExecutable;
 using System.IO.Pipes;
+using ChromeDroid_TabMan.Auxiliary.Exceptions;
 
 namespace ChromeDroid_TabMan.Auxiliary
 {

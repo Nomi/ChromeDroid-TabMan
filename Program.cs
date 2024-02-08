@@ -26,8 +26,9 @@ namespace ChromeDroid_TabMan
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //TabsList tabbys = new TabsList(false);
-            MainForm form1 = new MainForm();//can pass tabblist bby reference??
-            Application.Run(form1); 
+            MainForm mainForm = new MainForm();//can pass tabblist bby reference??
+            GlobalExceptionHandler.Initialize();
+            Application.Run(mainForm); 
             // REPLACE STUFF WITH DATABINDING SOMEHOW?????
         }
     }
