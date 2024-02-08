@@ -6,7 +6,7 @@ using System.Windows.Forms;
 //using JQ.Net.JQ;
 using System.Collections.Generic;
 using System.Text.Json;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using System.Linq;
 using ChromeDroid_TabMan.Data;
 using AdvancedSharpAdbClient;
