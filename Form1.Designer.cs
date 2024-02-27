@@ -70,7 +70,9 @@
             // 
             // tabListTree
             // 
+            this.tabListTree.BackColor = System.Drawing.Color.Black;
             this.tabListTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabListTree.ForeColor = System.Drawing.Color.White;
             this.tabListTree.Location = new System.Drawing.Point(3, 3);
             this.tabListTree.Name = "tabListTree";
             this.tabListTree.Size = new System.Drawing.Size(1242, 459);
@@ -103,28 +105,29 @@
             // dataGridView1
             // 
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView1.BackgroundColor = System.Drawing.Color.Black;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.LightBlue;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.Black;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Black;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.GridColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.dataGridView1.GridColor = System.Drawing.SystemColors.AppWorkspace;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 29;
             this.dataGridView1.Size = new System.Drawing.Size(1242, 459);
@@ -205,76 +208,81 @@
             // 
             this.button_ExportAsBookmarks.AutoSize = true;
             this.button_ExportAsBookmarks.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_ExportAsBookmarks.BackColor = System.Drawing.Color.DimGray;
             this.button_ExportAsBookmarks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_ExportAsBookmarks.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button_ExportAsBookmarks.ForeColor = System.Drawing.Color.Black;
+            this.button_ExportAsBookmarks.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_ExportAsBookmarks.Location = new System.Drawing.Point(212, 48);
             this.button_ExportAsBookmarks.Name = "button_ExportAsBookmarks";
             this.button_ExportAsBookmarks.Size = new System.Drawing.Size(203, 39);
             this.button_ExportAsBookmarks.TabIndex = 4;
             this.button_ExportAsBookmarks.Text = "To Bookmarks";
-            this.button_ExportAsBookmarks.UseVisualStyleBackColor = true;
+            this.button_ExportAsBookmarks.UseVisualStyleBackColor = false;
             this.button_ExportAsBookmarks.Click += new System.EventHandler(this.button_ExportAsBookmarks_Click);
             // 
             // button_exportCSV
             // 
             this.button_exportCSV.AutoSize = true;
             this.button_exportCSV.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_exportCSV.BackColor = System.Drawing.Color.DimGray;
             this.button_exportCSV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_exportCSV.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button_exportCSV.ForeColor = System.Drawing.Color.Black;
+            this.button_exportCSV.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_exportCSV.Location = new System.Drawing.Point(212, 3);
             this.button_exportCSV.Name = "button_exportCSV";
             this.button_exportCSV.Size = new System.Drawing.Size(203, 39);
             this.button_exportCSV.TabIndex = 3;
             this.button_exportCSV.Text = "To CSV Text File";
-            this.button_exportCSV.UseVisualStyleBackColor = true;
+            this.button_exportCSV.UseVisualStyleBackColor = false;
             this.button_exportCSV.Click += new System.EventHandler(this.button_exportCSV_Click);
             // 
             // button_ExportAsSQLiteDB
             // 
             this.button_ExportAsSQLiteDB.AutoSize = true;
             this.button_ExportAsSQLiteDB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_ExportAsSQLiteDB.BackColor = System.Drawing.Color.DimGray;
             this.tableLayoutPanel3.SetColumnSpan(this.button_ExportAsSQLiteDB, 2);
             this.button_ExportAsSQLiteDB.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_ExportAsSQLiteDB.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button_ExportAsSQLiteDB.ForeColor = System.Drawing.Color.Black;
+            this.button_ExportAsSQLiteDB.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_ExportAsSQLiteDB.Location = new System.Drawing.Point(3, 93);
             this.button_ExportAsSQLiteDB.Name = "button_ExportAsSQLiteDB";
             this.button_ExportAsSQLiteDB.Size = new System.Drawing.Size(412, 41);
             this.button_ExportAsSQLiteDB.TabIndex = 2;
             this.button_ExportAsSQLiteDB.Text = "Export as SQLite DB";
-            this.button_ExportAsSQLiteDB.UseVisualStyleBackColor = true;
+            this.button_ExportAsSQLiteDB.UseVisualStyleBackColor = false;
             this.button_ExportAsSQLiteDB.Click += new System.EventHandler(this.button_ExportAsSQLiteDB_Click);
             // 
             // button_ExportAsBookmarksGrouped
             // 
             this.button_ExportAsBookmarksGrouped.AutoSize = true;
             this.button_ExportAsBookmarksGrouped.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_ExportAsBookmarksGrouped.BackColor = System.Drawing.Color.DimGray;
             this.button_ExportAsBookmarksGrouped.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_ExportAsBookmarksGrouped.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button_ExportAsBookmarksGrouped.ForeColor = System.Drawing.Color.Black;
+            this.button_ExportAsBookmarksGrouped.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_ExportAsBookmarksGrouped.Location = new System.Drawing.Point(3, 48);
             this.button_ExportAsBookmarksGrouped.Name = "button_ExportAsBookmarksGrouped";
             this.button_ExportAsBookmarksGrouped.Size = new System.Drawing.Size(203, 39);
             this.button_ExportAsBookmarksGrouped.TabIndex = 1;
             this.button_ExportAsBookmarksGrouped.Text = "To Bookmarks (Grouped)";
-            this.button_ExportAsBookmarksGrouped.UseVisualStyleBackColor = true;
+            this.button_ExportAsBookmarksGrouped.UseVisualStyleBackColor = false;
             this.button_ExportAsBookmarksGrouped.Click += new System.EventHandler(this.button_ExportAsBookmarksGrouped_Click);
             // 
             // button_exportListHTMLGrouped
             // 
             this.button_exportListHTMLGrouped.AutoSize = true;
             this.button_exportListHTMLGrouped.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_exportListHTMLGrouped.BackColor = System.Drawing.Color.DimGray;
             this.button_exportListHTMLGrouped.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_exportListHTMLGrouped.Font = new System.Drawing.Font("Segoe UI Semibold", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button_exportListHTMLGrouped.ForeColor = System.Drawing.Color.Black;
+            this.button_exportListHTMLGrouped.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_exportListHTMLGrouped.Location = new System.Drawing.Point(3, 3);
             this.button_exportListHTMLGrouped.Name = "button_exportListHTMLGrouped";
             this.button_exportListHTMLGrouped.Size = new System.Drawing.Size(203, 39);
             this.button_exportListHTMLGrouped.TabIndex = 0;
             this.button_exportListHTMLGrouped.Text = "To HTML List (Grouped)";
-            this.button_exportListHTMLGrouped.UseVisualStyleBackColor = true;
+            this.button_exportListHTMLGrouped.UseVisualStyleBackColor = false;
             this.button_exportListHTMLGrouped.Click += new System.EventHandler(this.button_exportListHTMLGrouped_Click);
             // 
             // importAndProcessGroupbox
@@ -308,15 +316,18 @@
             // 
             // button_ImportAndProcess
             // 
+            this.button_ImportAndProcess.AutoSize = true;
+            this.button_ImportAndProcess.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_ImportAndProcess.BackColor = System.Drawing.Color.DimGray;
             this.button_ImportAndProcess.Dock = System.Windows.Forms.DockStyle.Top;
             this.button_ImportAndProcess.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button_ImportAndProcess.ForeColor = System.Drawing.Color.Black;
+            this.button_ImportAndProcess.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_ImportAndProcess.Location = new System.Drawing.Point(3, 23);
             this.button_ImportAndProcess.Name = "button_ImportAndProcess";
-            this.button_ImportAndProcess.Size = new System.Drawing.Size(404, 29);
+            this.button_ImportAndProcess.Size = new System.Drawing.Size(404, 30);
             this.button_ImportAndProcess.TabIndex = 0;
             this.button_ImportAndProcess.Text = "Import and Process";
-            this.button_ImportAndProcess.UseVisualStyleBackColor = true;
+            this.button_ImportAndProcess.UseVisualStyleBackColor = false;
             this.button_ImportAndProcess.Click += new System.EventHandler(this.button_ImportAndProcess_Click);
             // 
             // connectGroupBox
@@ -336,8 +347,7 @@
             // 
             // button_ManuallyDiscoverDevToolsSockets
             // 
-            this.button_ManuallyDiscoverDevToolsSockets.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.button_ManuallyDiscoverDevToolsSockets.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.button_ManuallyDiscoverDevToolsSockets.BackColor = System.Drawing.SystemColors.Info;
             this.button_ManuallyDiscoverDevToolsSockets.Font = new System.Drawing.Font("Segoe UI Light", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -348,7 +358,7 @@
             this.button_ManuallyDiscoverDevToolsSockets.TabIndex = 4;
             this.button_ManuallyDiscoverDevToolsSockets.Text = "Fix or Discover DevTools Sockets";
             this.button_ManuallyDiscoverDevToolsSockets.UseVisualStyleBackColor = false;
-            this.button_ManuallyDiscoverDevToolsSockets.Click += new System.EventHandler(this.button_FixOrDiscoverDevToolsSockets_Click);
+            this.button_ManuallyDiscoverDevToolsSockets.Click += new System.EventHandler(this.button_FixOrDiscoverDevToolsSockets_Click_Async);
             // 
             // tableLayoutPanel2
             // 
@@ -386,29 +396,32 @@
             // 
             this.button_connectfetchjson.AutoSize = true;
             this.button_connectfetchjson.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_connectfetchjson.BackColor = System.Drawing.Color.DimGray;
             this.button_connectfetchjson.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_connectfetchjson.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button_connectfetchjson.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.button_connectfetchjson.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_connectfetchjson.Location = new System.Drawing.Point(3, 30);
             this.button_connectfetchjson.Name = "button_connectfetchjson";
             this.button_connectfetchjson.Size = new System.Drawing.Size(398, 41);
             this.button_connectfetchjson.TabIndex = 1;
             this.button_connectfetchjson.Text = "Connect and Fetch JSON";
-            this.button_connectfetchjson.UseVisualStyleBackColor = true;
+            this.button_connectfetchjson.UseVisualStyleBackColor = false;
             this.button_connectfetchjson.Click += new System.EventHandler(this.button_connectfetchjson_Click);
             // 
             // button_selectjson
             // 
             this.button_selectjson.AutoSize = true;
+            this.button_selectjson.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_selectjson.BackColor = System.Drawing.Color.DimGray;
             this.button_selectjson.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_selectjson.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button_selectjson.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.button_selectjson.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.button_selectjson.Location = new System.Drawing.Point(3, 90);
             this.button_selectjson.Name = "button_selectjson";
             this.button_selectjson.Size = new System.Drawing.Size(398, 44);
             this.button_selectjson.TabIndex = 2;
             this.button_selectjson.Text = "Select pre-fetched JSON";
-            this.button_selectjson.UseVisualStyleBackColor = true;
+            this.button_selectjson.UseVisualStyleBackColor = false;
             this.button_selectjson.Click += new System.EventHandler(this.button_selectjson_Click);
             // 
             // comboBox_BrowserSelect

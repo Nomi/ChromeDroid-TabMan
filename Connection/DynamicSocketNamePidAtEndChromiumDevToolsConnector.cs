@@ -1,28 +1,32 @@
 ﻿using AdvancedSharpAdbClient;
+using AdvancedSharpAdbClient.DeviceCommands;
 using ChromeDroid_TabMan.Auxiliary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ChromeDroid_TabMan.Auxiliary.ImportUtils;
 
 namespace ChromeDroid_TabMan.Connection_and_Import
 {
-    internal class StaticSocketNameChromiumAdbConnector : IAdbConnector
+    internal class DynamicSocketNamePidAtEndChromiumDevToolsConnector : IChromiumDevToolsConnector
     {
         public string AdbPath { get; }
         public string BrowserPackageName { get; }
         public string ForwardParameter_Remote { get; }
-        public StaticSocketNameChromiumAdbConnector(string adbPath, string browserPackageName, string forwardParameter_Remote)
+        public DynamicSocketNamePidAtEndChromiumDevToolsConnector(string adbPath, string browserPackageName, string baseForwardParameterRemote_MissingPidAtEnd)
         {
             AdbPath = adbPath;
             BrowserPackageName = browserPackageName;
-            ForwardParameter_Remote = forwardParameter_Remote;
+            string chromiumDevToolsSocketName = baseForwardParameterRemote_MissingPidAtEnd + "_" + ImportUtils.GetChromiumBrowserPid(AdbPath,BrowserPackageName);
+            ForwardParameter_Remote = chromiumDevToolsSocketName;
         }
 
         public string StartAdbJsonListServer()
         {
             return ImportUtils.StartChromeAndroidJsonListServer(AdbPath, BrowserPackageName, ForwardParameter_Remote);
         }
+        
     }
 }

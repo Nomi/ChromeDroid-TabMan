@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChromeDroid_TabMan.Connection_and_Import
 {
-    internal interface IAdbConnector
+    internal interface IChromiumDevToolsConnector
     {
         string AdbPath { get; }
         string BrowserPackageName { get; }
